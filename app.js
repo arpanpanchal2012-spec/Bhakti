@@ -622,6 +622,7 @@ function renderSequenceList() {
       </div>
       <div class="seq-actions">
         <button class="action-icon-btn" title="Present this item" onclick="selectAndPresentItem(${index})">▶️</button>
+        <button class="action-icon-btn" title="Duplicate item" onclick="duplicateItem(${index})">⧉</button>
         <button class="action-icon-btn" title="Edit item" onclick="editSequenceItem(${index})">✏️</button>
         <button class="action-icon-btn" title="Move Up" onclick="moveSequenceItem(${index}, -1)" ${index === 0 ? 'disabled' : ''}>⬆️</button>
         <button class="action-icon-btn" title="Move Down" onclick="moveSequenceItem(${index}, 1)" ${index === appData.items.length - 1 ? 'disabled' : ''}>⬇️</button>
@@ -679,6 +680,8 @@ function editSequenceItem(index) {
   document.getElementById('itemSingerInput').value = item.singer || '';
   document.getElementById('itemLocationInput').value = item.location || '';
   document.getElementById('itemNotesInput').value = item.notes || '';
+  document.getElementById('songGlowColor').value = item.glowColor || '#ff00ff';
+  document.getElementById('introSeconds').value = item.introSeconds ?? 5;
   document.getElementById('enableItemBuzzer').checked = !!item.enableBuzzer;
 
   // Type specific fields
@@ -746,8 +749,12 @@ function resetItemForm() {
   document.getElementById('itemSingerInput').value = '';
   document.getElementById('itemLocationInput').value = '';
   document.getElementById('itemNotesInput').value = '';
+  document.getElementById('songGlowColor').value = '#ff00ff';
+  document.getElementById('introSeconds').value = 5;
   document.getElementById('enableItemBuzzer').checked = false;
   document.getElementById('itemLyricsInput').value = '';
+  document.getElementById('itemLyricSizeInput').value=appData.globalSettings?.defaultLyricSize||64;
+  document.getElementById('itemLyricSizeDisplay').textContent=document.getElementById('itemLyricSizeInput').value+'px';
   document.getElementById('quizOptionsInput').value = '';
   document.getElementById('buzzMysteryTitle').value = '';
   document.getElementById('buzzFilmName').value = '';
@@ -774,6 +781,7 @@ async function handleSaveItem() {
     return;
   }
 
+  if(type==='quiz'){const opts=document.getElementById('quizOptionsInput').value.split('\n').map(x=>x.trim()).filter(Boolean);const answer=Number(document.getElementById('quizAnswerSelect').value);if(opts.length<2 || opts.length>4 || answer>=opts.length){alert('Enter two to four options and select a valid correct answer.');return}}
   const prevItem = editingIndex !== null ? appData.items[editingIndex] : null;
   const itemId = prevItem ? prevItem.id : ('item-' + Date.now());
 
@@ -787,6 +795,7 @@ async function handleSaveItem() {
       mediaFileName = file.name;
     } catch (e) {
       alert('Could not save media file to browser storage. Try a smaller file.');
+      return;
     }
   }
 
@@ -809,6 +818,8 @@ async function handleSaveItem() {
       .filter(Boolean);
     newItem.lyricSize = parseInt(document.getElementById('itemLyricSizeInput').value, 10) || 52;
     newItem.lyricStyle = getSelectedLyricStyle();
+    newItem.glowColor = document.getElementById('songGlowColor').value;
+    newItem.introSeconds = Math.max(0,Math.min(30,Number(document.getElementById('introSeconds').value)||0));
   } else if (type === 'quiz') {
     newItem.options = document.getElementById('quizOptionsInput').value
       .split('\n')
@@ -850,7 +861,7 @@ function updateFormFieldsVisibility() {
   const showBuzz = type === 'buzz';
   const showSlide = type === 'slide';
   const showGame = type === 'game';
-  const showMedia = ['song', 'audio', 'slide', 'buzz'].includes(type);
+  const showMedia = ['song', 'audio', 'slide', 'buzz', 'quiz'].includes(type);
 
   document.getElementById('formPerformerGroup').classList.toggle('hide', !showPerformer);
   document.getElementById('formLyricsGroup').classList.toggle('hide', !showLyrics);
@@ -964,7 +975,7 @@ function renderAudioStage(stage, item) {
       <div class="audio-track-title">${escapeHtml(item.title)}</div>
       <div class="audio-track-singer">🎤 ${escapeHtml(item.singer || 'Live Audio')} ${item.location ? '• ' + escapeHtml(item.location) : ''}</div>
       <canvas id="visualizerCanvas" class="visualizer-canvas" width="600" height="120"></canvas>
-      <div id="audioPlayStatus" style="font-size: 0.95rem; color: #a0aec0;">🎶 Live Audio Frequency Visualizer</div>
+      <div id="audioPlayStatus" style="font-size: 0.95rem; color: #a0aec0;">Audio track · no lyrics</div>
     </div>
   `;
   setupVisualizerCanvas();

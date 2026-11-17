@@ -1,52 +1,32 @@
-# Show Studio + Live Zoom Buzzer
+# DMHT Bhakti Studio
 
-A browser-based show manager and a separate shared online buzzer. Show Studio manages the playlist and anchor script; the live buzzer lets Zoom guests buzz from their own devices. No database or paid API is required for this prototype.
+A show organizer, presenter/projector interface, anchor script, and online participant buzzer. It is a Python web service with HTML/CSS/JavaScript; no separate packages are required.
 
-## Deploy on Render using GitHub
+## Deploy on Render
 
-1. Create a GitHub repository. Upload **the contents of this folder** to its root. Ensure `render.yaml`, `index.html`, `app.js`, `styles.css`, and the `buzzer` folder are visible at the top level. Do not upload only the ZIP file.
-2. On Render, choose **New → Blueprint**, connect your GitHub account, and select the repository. Render reads `render.yaml`. Follow the prompts to create the web service and choose an available plan.
-3. Wait for the build and deployment to finish. Open the public service URL Render provides. This opens **Show Studio**.
-4. Use the **online buzzer room** link at the top of Show Studio to open the online buzzer.
+1. Unzip the downloaded file. Upload the **contents** of `show-studio-render` to the root of your GitHub repository, replacing the previous files. Check that `index.html`, `app.js`, `integration.js`, `enhancements.js`, `styles.css`, `theme.css`, `render.yaml`, and the `buzzer` folder are all present.
+2. In your existing Render web service, select **Manual Deploy → Deploy latest commit** (or wait for automatic deploy). If creating a new service, choose **Web Service**, runtime **Python**, with:
+   - Build: `python -m compileall -q buzzer`
+   - Start: `python -u buzzer/server.py`
+   - Root directory: blank if the above files are at repository root.
+3. Open the main Render URL. Refresh both host and projector pages after a deploy; cached pages from earlier versions can cause mismatches.
 
-Alternatively, create a Render **Web Service** from your repository and set:
-- Language/runtime: Python
-- Build command: `python -m compileall -q buzzer`
-- Start command: `python -u buzzer/server.py`
+## Event workflow
 
-Render provides the `PORT` environment variable; the server listens on `0.0.0.0`.
+- **Program:** create or edit songs, audio, quiz, slides and other segments. Attach files on the device that will host the show. Song video can loop; the host player supplies audio. Song intros can be disabled or shown for up to 30 seconds. Style 9 shows the next lyric. Style 11 supports a custom glow color. Audio tracks do not show lyrics.
+- **Quiz:** enter two to four options and the correct option; attach an optional image. In Presenter, use Next Lyric / Reveal (or Space) to reveal options one by one and then the answer. Down arrows for navigation are not used; use Next Item or Page Down.
+- **Presenter:** open Projector Screen, then start each item’s attached media from the host player. The projector displays muted video; share your computer audio in Zoom, and share the projector window. Host and projector must run in the same browser profile on the same device. The host and projector video are separate browser players, synchronized approximately; device/browser restrictions and latency can affect synchronization.
+- **Buzzer:** in Presenter click Create room and Copy participant link. Send the participant link in Zoom chat. Participants enter a name and click Join round. Open/Lock/Reset from Presenter; choose Show/hide participants on projector. Check the optional buzzer box when editing any segment to show it automatically. Rank is based on server receipt; network and Zoom delays affect fairness. Scoring buttons add or subtract points locally; the host must avoid awarding the same answer twice.
+- **Anchor:** generate an editable script from event details and the sequence. Host notes are private; the anchor tab and teleprompter are not part of the projector.
+- **Pre-show check:** looks for missing titles, local attachments, quiz answers and song lyrics. It does not verify playback codecs, Zoom audio or connectivity; rehearse those manually.
+- **Backup:** regular Export is JSON with show metadata only. `Backup with media` generates a JSON file with media encoded in it; it can be very large and use substantial browser memory. Restore via `Restore backup`. Make a separate copy of original videos as well. Browser storage quota and operating-system policies can remove local data.
 
-## Use it with Zoom
+## Persistence and safety
 
-1. Visit the deployment's main URL, select **online buzzer room**, and click **Create host room**.
-2. Copy the **participant link** displayed on the host page and paste it into Zoom chat. Keep the host URL private; it contains the key that controls the room.
-3. Participants open the link on their computer or phone, enter their names, and remain in Zoom to hear the instrumental.
-4. Share the music in Zoom using Zoom's computer-audio sharing. In the buzzer host page, press **Open buzzers**. Ranking is based on server receipt order. Press **Lock** to stop new buzzes and **Reset round** before the next question.
+Buzzer rooms are stored in SQLite. `BUZZER_DB_PATH` sets the database file path; default is `buzzer/rooms.sqlite3`. A normal local process restart retains the database file. **Render's default filesystem is ephemeral**, so a redeploy or replacement can erase rooms. To retain rooms on Render, provision a persistent disk if your plan supports it and set `BUZZER_DB_PATH` to a file on the mounted disk. Use one server instance; SQLite files are not a shared multi-instance database. Back up important data independently.
 
-The buzzer is a separate browser page alongside Zoom; it is **not a Zoom Marketplace app**. The built-in Show Studio attendee view uses local browser messaging and is only for rehearsal; use the online room for remote guests. Show Studio does not currently synchronize its own playlist, scores or round controls with the online buzzer; operate both pages side by side.
+Show data, scores and attached media remain in the host browser, not the server. A host room token controls the buzzer and is held in the host tab's session storage; anyone with that token can control the room. Participant names are visible to anyone with the room link. There is no account login, encryption-at-rest, rate limiting, verified identity, or participant-disconnect tracking. This prototype is for trusted events and requires real rehearsal, not high-stakes competitions.
 
 ## Run locally
 
-Install Python 3.9 or newer. In the folder containing this README, run:
-
-```bash
-python buzzer/server.py
-```
-
-If needed use `python3` instead. Visit `http://localhost:8080/` for Show Studio and `http://localhost:8080/buzzer/` for the buzzer. `localhost` cannot be used by remote Zoom participants; deploy publicly first.
-
-## Important limitations
-
-- **Temporary rooms:** Rooms and buzzes are held in server memory. A restart, redeploy, idle sleep, or service replacement removes them. Create a new room after a restart. Run only one server instance: multiple instances do not share rooms. Render plans and idle/sleep behavior can change; check Render's current plan details.
-- **Local show data:** Show Studio uses browser storage on the device and browser where it is entered. It is not a multi-user cloud editor. Export and keep backups. Media files may be large; test persistence, browser quota and export/relink behavior before a show.
-- **Fairness:** The server ranks requests by receipt, not by when people heard the audio or pressed the button. Internet latency, Zoom audio latency, and polling delays matter. Displayed times are from the host opening the round, not reliable contestant reaction times.
-- **Privacy & security:** Anyone with a participant link can join and see names; anyone with a host URL can control the room. Use first names or nicknames. There are no accounts, moderation, persistent database, rate limits, automatic room expiry, or protection against determined cheating. One buzz per browser identifier is a convenience, not identity verification. This prototype is for trusted groups, not high-stakes or large public events.
-- **Browser limitations:** Use a modern browser with JavaScript and local storage enabled. Keep pages open and test a complete round before going live.
-
-## Host-controlled online buzzer and media
-
-In Stage & Presenter, choose **Create room**, then copy the participant link into Zoom chat. Guests enter their name and press **Join round**. The host sees the joined list and can use Open Buzzers, Lock, and Reset from this same screen. The projector can show the joined list and server-ranked buzzes. Use **Show / hide participants on projector** to return to the question. When editing any segment, check **Show online buzzer for this segment** if you want the list shown automatically when presenting it. Opening or resetting a round also shows the list; hide it to see the quiz.
-
-Attach an audio/video file when adding or editing a segment. Select the segment on the presenter screen, then use its **Attached media** player. For song video, the host player supplies the audio and the projector shows a muted synchronized video. In Zoom, share the projector window and enable computer audio sharing. Browser autoplay, audio routing and video synchronization vary: test on the exact equipment before an event. Song names are shown briefly and lyrics are advanced manually.
-
-This integrated version uses browser-local messaging between host and projector on the same browser/device and internet polling for guests. Scores remain separate from the live buzzer rankings. Rooms are temporary and must use a single server instance.
+Run `python buzzer/server.py` from this folder (or `python3`), then open `http://localhost:8080/`. Localhost cannot be accessed by remote Zoom participants; deploy online or use a properly configured public server.
