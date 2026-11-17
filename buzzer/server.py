@@ -14,9 +14,9 @@ class Handler(BaseHTTPRequestHandler):
     r=rooms.get(room)
     if not r:return self.respond(404,{'error':'Room not found. Ask the host for a new link.'})
     return self.respond(200,{'status':r['status'],'round':r['round'],'buzzes':r['buzzes']})
-  if u.path in ('/', '/index.html', '/studio', '/studio/', '/studio/index.html', '/studio/app.js', '/studio/styles.css'):
+  if u.path in ('/', '/index.html', '/studio', '/studio/', '/studio/index.html', '/studio/app.js', '/studio/styles.css', '/studio/theme.css'):
    name = 'index.html' if u.path in ('/', '/index.html', '/studio', '/studio/', '/studio/index.html') else u.path.rsplit('/',1)[-1]
-   b=open(os.path.join(ROOT,'..',name),'rb').read();self.send_response(200);self.send_header('Content-Type', {'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','styles.css':'text/css; charset=utf-8'}[name]);self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(b);return
+   b=open(os.path.join(ROOT,'..',name),'rb').read();self.send_response(200);self.send_header('Content-Type', {'index.html':'text/html; charset=utf-8','app.js':'text/javascript; charset=utf-8','styles.css':'text/css; charset=utf-8','theme.css':'text/css; charset=utf-8'}[name]);self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(b);return
   if u.path in ('/buzzer', '/buzzer/', '/buzzer/index.html'):
    b=open(os.path.join(ROOT,'index.html'),'rb').read();self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(b);return
   self.send_error(404)
