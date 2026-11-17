@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: show-studio-buzzer
+    runtime: python
+    buildCommand: "python -m compileall -q buzzer"
+    startCommand: "python -u buzzer/server.py"
+    healthCheckPath: /

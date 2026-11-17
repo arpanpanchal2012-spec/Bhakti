@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Show Studio Pro - Stage, Anchor & Zoom Instrumental Buzzer</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div style="padding:12px 20px;background:#fff5d5;color:#4b3a13;text-align:center">For real Zoom participants, use the <a href="/" target="_blank" rel="noopener">online buzzer room</a>. The attendee view inside this app is a local-device rehearsal only.</div>
+
+  <!-- Top Sticky Header -->
+  <header class="app-header">
+    <div class="brand">
+      <div class="brand-icon">🎤</div>
+      <div class="brand-title">
+        <h1>Show Studio Pro</h1>
+        <p>Multi-Singer Presentation • Anchor Script • Zoom Instrumental Buzzer</p>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+      <button class="nav-btn active" id="navSetup" onclick="switchView('setup')">
+        📋 Playlist Setup
+      </button>
+      <button class="nav-btn" id="navPresentation" onclick="switchView('presentation')">
+        🖥️ Stage & Presenter
+      </button>
+      <button class="nav-btn" id="navAnchorScript" onclick="switchView('anchorScript')">
+        📜 Anchor Script Pro
+      </button>
+      <button class="nav-btn" id="navBuzzerGuest" onclick="switchView('buzzerGuest')">
+        📱 Zoom Buzzer (Attendee View)
+      </button>
+      <button class="nav-btn" id="navLeaderboard" onclick="switchView('leaderboard')">
+        🏆 Leaderboard Scores
+      </button>
+    </nav>
+
+    <!-- Header Action Buttons -->
+    <div class="header-actions">
+      <button class="quick-btn live-btn" onclick="openAudienceScreenWindow()" title="Open clean 100% full screen for TV, Projector or Zoom Window Share">
+        ↗️ Projector Screen
+      </button>
+      <button class="quick-btn success-btn" onclick="openParticipantBuzzerWindow()" title="Open attendee buzzer in a separate popup tab">
+        📱 Attendee Buzzer Tab
+      </button>
+      <button class="quick-btn" onclick="exportShowPackage()" title="Export complete show data as JSON">
+        💾 Export Show
+      </button>
+      <button class="quick-btn" onclick="triggerImportFile()" title="Import an existing show JSON">
+        📂 Import Show
+      </button>
+      <span id="saveStatusIndicator" style="font-size: 0.8rem; color: #a5b4fc; opacity: 0.7;">Auto-saved</span>
+    </div>
+  </header>
+
+  <!-- Live Anchor Soundboard Pill Bar -->
+  <aside class="soundboard-bar">
+    <div class="soundboard-title">
+      <span>⚡</span> Host Soundboard:
+    </div>
+    <div class="sound-buttons">
+      <button class="sfx-btn" onclick="playApplauseSound()" title="Shortcut: Press 1">👏 Applause (1)</button>
+      <button class="sfx-btn" onclick="playDrumrollSound()" title="Shortcut: Press 2">🥁 Drumroll (2)</button>
+      <button class="sfx-btn" onclick="playCorrectSound()" title="Shortcut: Press 3">🔔 Correct Chime (3)</button>
+      <button class="sfx-btn" onclick="playWrongSound()" title="Shortcut: Press 4">❌ Wrong Buzzer (4)</button>
+      <button class="sfx-btn" onclick="playBuzzerSound()" title="Shortcut: Press 5">🚨 Big Buzz (5)</button>
+      <button class="sfx-btn" onclick="playTickSound()">⏱️ Tick Countdown</button>
+    </div>
+    <div style="font-size: 0.75rem; color: #94a3b8;">
+      Keys: <strong>←/→</strong> Lyrics • <strong>PgUp/PgDn</strong> Items • <strong>B</strong> Blackout • <strong>R</strong> Reveal
+    </div>
+  </aside>
+
+  <!-- Hidden File Input for JSON import -->
+  <input type="file" id="importShowFileInput" accept="application/json,.json" style="display: none;" onchange="handleImportFile(event)">
+
+  <!-- Main Container -->
+  <main class="app-container">
+
+    <!-- ====================================================================
+         VIEW 1: SETUP & PLAYLIST BUILDER
+         ==================================================================== -->
+    <section class="view-section active" id="setupView">
+      <div class="grid-two-col">
+
+        <!-- Left Column: Event Info & Add/Edit Item Form -->
+        <div>
+          <!-- Event Theme & Info Card -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span>🎭</span> Event Theme & Anchor Settings
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="eventNameInput">Event Name:</label>
+              <input type="text" id="eventNameInput" placeholder="e.g. Melody Junction 2026 - Live Musical Evening">
+            </div>
+
+            <div class="form-group">
+              <label for="eventThemeInput">Event Theme / Occasion:</label>
+              <input type="text" id="eventThemeInput" placeholder="e.g. Bollywood & Retro Melodies Across Cities">
+            </div>
+
+            <div class="form-group">
+              <label for="themeDescInput">Theme Description & Highlights:</label>
+              <textarea id="themeDescInput" placeholder="What makes this event special? Will be spoken by the anchor in opening remarks..."></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="customGreetingInput">Custom Opening Greeting <span class="hint">(optional / e.g. JSCA, Namaste)</span>:</label>
+              <input type="text" id="customGreetingInput" placeholder="e.g. Namaste, Vanakkam, and a very warm welcome to everyone joining!">
+            </div>
+          </div>
+
+          <!-- Add / Edit Item Form Card -->
+          <div class="card" id="itemFormCard">
+            <div class="card-header">
+              <div class="card-title">
+                <span>➕</span> Add or Edit Show Segment
+              </div>
+              <span id="cancelEditBtn" class="hide" style="font-size: 0.85rem; color: #e74c3c; cursor: pointer; font-weight: bold;" onclick="resetItemForm()">
+                ✕ Cancel Edit
+              </span>
+            </div>
+
+            <div class="form-group">
+              <label for="itemTypeSelect">Segment Type:</label>
+              <select id="itemTypeSelect">
+                <option value="song">🎤 Video Song (with Styled Lyrics)</option>
+                <option value="buzz">🚨 Instrumental Buzz Round (Zoom Guess the Song)</option>
+                <option value="quiz">❓ Trivia Quiz (Interactive Reveal)</option>
+                <option value="audio">🎵 Audio Track (with Live Frequency Visualizer)</option>
+                <option value="slide">🖼️ Image Slide / Banner (with Caption)</option>
+                <option value="game">🎮 Party Game / Challenge</option>
+                <option value="break">☕ Short Break / Intermission</option>
+                <option value="announcement">📢 Special Announcement</option>
+                <option value="custom">✨ Custom Segment</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="itemTitleInput">Segment Title / Question / Song Name:</label>
+              <input type="text" id="itemTitleInput" placeholder="e.g. Pehla Nasha or Guess the 90s Blockbuster Hook">
+            </div>
+
+            <!-- Performer Group (Song / Audio) -->
+            <div id="formPerformerGroup" class="form-row">
+              <div class="form-group">
+                <label for="itemSingerInput">Singer / Performer Name:</label>
+                <input type="text" id="itemSingerInput" placeholder="e.g. Priya Sharma">
+              </div>
+              <div class="form-group">
+                <label for="itemLocationInput">Performer City / Location <span class="hint">(optional)</span>:</label>
+                <input type="text" id="itemLocationInput" placeholder="e.g. San Jose, CA">
+              </div>
+            </div>
+
+            <!-- Media File Upload (Video, Audio, Slide Image) -->
+            <div id="formMediaGroup" class="form-group">
+              <label for="itemMediaFile">Attach Local Media File <span class="hint">(optional MP4 video, MP3 audio, or image slide)</span>:</label>
+              <input type="file" id="itemMediaFile">
+              <p style="font-size: 0.75rem; color: #718096; margin-top: 4px;">
+                💡 Stored offline in your browser's IndexedDB. Built-in synthesizer & sample backgrounds work automatically even without files!
+              </p>
+            </div>
+
+            <!-- Lyrics Group (Song) -->
+            <div id="formLyricsGroup">
+              <div class="form-group">
+                <label for="itemLyricsInput">Lyrics <span class="hint">(one line per line break - advances with Arrow keys)</span>:</label>
+                <textarea id="itemLyricsInput" placeholder="Pehla nasha, pehla khumar&#10;Naya pyaar hai, naya intezaar&#10;Kar loon main kya apna haal"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label>Lyric Font Size:</label>
+                <div class="slider-container">
+                  <input type="range" id="itemLyricSizeInput" min="28" max="78" value="52">
+                  <div class="size-display" id="itemLyricSizeDisplay">52px</div>
+                </div>
+              </div>
+
+              <!-- 11 Lyric Styles Grid Selector -->
+              <div class="form-group">
+                <label>Select Lyric Display Style (11 Pro Variations):</label>
+                <div class="style-grid" id="lyricStyleGrid">
+                  <div class="style-option selected" data-style="1">
+                    <div class="style-emoji">✨</div>
+                    <div class="style-name">1. Classic Gold</div>
+                  </div>
+                  <div class="style-option" data-style="2">
+                    <div class="style-emoji">⚡</div>
+                    <div class="style-name">2. Neon Bright</div>
+                  </div>
+                  <div class="style-option" data-style="3">
+                    <div class="style-emoji">🎤</div>
+                    <div class="style-name">3. Karaoke Outline</div>
+                  </div>
+                  <div class="style-option" data-style="4">
+                    <div class="style-emoji">💎</div>
+                    <div class="style-name">4. Elegant Minimal</div>
+                  </div>
+                  <div class="style-option" data-style="5">
+                    <div class="style-emoji">🌈</div>
+                    <div class="style-name">5. Colorful Pop</div>
+                  </div>
+                  <div class="style-option" data-style="6">
+                    <div class="style-emoji">📺</div>
+                    <div class="style-name">6. Retro TV</div>
+                  </div>
+                  <div class="style-option" data-style="7">
+                    <div class="style-emoji">🎬</div>
+                    <div class="style-name">7. Cinema Box</div>
+                  </div>
+                  <div class="style-option" data-style="8">
+                    <div class="style-emoji">🌟</div>
+                    <div class="style-name">8. Pulsing Glow</div>
+                  </div>
+                  <div class="style-option" data-style="9">
+                    <div class="style-emoji">📝</div>
+                    <div class="style-name">9. Double Line</div>
+                  </div>
+                  <div class="style-option" data-style="10">
+                    <div class="style-emoji">🤾</div>
+                    <div class="style-name">10. Bouncing Text</div>
+                  </div>
+                  <div class="style-option" data-style="11">
+                    <div class="style-emoji">🎭</div>
+                    <div class="style-name">11. Cinema Italic</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quiz Fields Group -->
+            <div id="formQuizGroup" class="hide">
+              <div class="form-group">
+                <label for="quizOptionsInput">Answer Options <span class="hint">(one option per line, up to 4)</span>:</label>
+                <textarea id="quizOptionsInput" placeholder="Lata Mangeshkar&#10;Asha Bhosle&#10;Geeta Dutt&#10;Kishore Kumar"></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="quizAnswerSelect">Correct Answer Option:</label>
+                <select id="quizAnswerSelect">
+                  <option value="0">Option A (Line 1)</option>
+                  <option value="1">Option B (Line 2)</option>
+                  <option value="2">Option C (Line 3)</option>
+                  <option value="3">Option D (Line 4)</option>
+                </select>
+              </div>
+            </div>
+
+            <!-- Instrumental Buzzer Fields Group -->
+            <div id="formBuzzGroup" class="hide">
+              <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px; margin-bottom: 12px; font-size: 0.85rem; color: #991b1b;">
+                🚨 <strong>Zoom Instrumental Buzzer:</strong> Attendees open their buzzer link, listen to the mystery tune, and buzz in. The host console automatically ranks buzzers in real time with millisecond precision!
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="buzzMysteryTitle">Correct Song Title:</label>
+                  <input type="text" id="buzzMysteryTitle" placeholder="e.g. Tujhe Dekha Toh Yeh Jaana Sanam">
+                </div>
+                <div class="form-group">
+                  <label for="buzzFilmName">Film / Movie / Album:</label>
+                  <input type="text" id="buzzFilmName" placeholder="e.g. DDLJ (1995)">
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="buzzOriginalSinger">Original Singers / Music Director:</label>
+                  <input type="text" id="buzzOriginalSinger" placeholder="e.g. Kumar Sanu & Lata Mangeshkar">
+                </div>
+                <div class="form-group">
+                  <label for="buzzHintsInput">Host Clues / Hints:</label>
+                  <input type="text" id="buzzHintsInput" placeholder="e.g. Mandolin intro, Swiss mustard fields">
+                </div>
+              </div>
+            </div>
+
+            <!-- Slide Group -->
+            <div id="formSlideGroup" class="hide">
+              <div class="form-group">
+                <label for="slideCaptionInput">Slide Subtitle / Banner Text:</label>
+                <input type="text" id="slideCaptionInput" placeholder="e.g. Live Musical Evening & Instrumental Trivia">
+              </div>
+            </div>
+
+            <!-- Game Group -->
+            <div id="formGameGroup" class="hide">
+              <div class="form-group">
+                <label for="gameRulesInput">Game Rules & Instructions:</label>
+                <textarea id="gameRulesInput" placeholder="e.g. 15 seconds to sing a song starting with the last letter..."></textarea>
+              </div>
+              <div class="form-group">
+                <label for="gamePrizesInput">Prizes & Incentives:</label>
+                <input type="text" id="gamePrizesInput" placeholder="e.g. Amazon Gift Voucher + Winner Badge">
+              </div>
+            </div>
+
+            <!-- Notes Group (Host confidential notes) -->
+            <div class="form-group">
+              <label for="itemNotesInput">Anchor / Presenter Notes <span class="hint">(confidential - visible to Host only)</span>:</label>
+              <textarea id="itemNotesInput" style="min-height: 70px;" placeholder="Any special instructions, cues, or transitions..."></textarea>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-primary" id="saveItemBtn" onclick="handleSaveItem()" style="flex: 1;">
+                ➕ Add to Sequence
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Show Sequence Timeline -->
+        <div>
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <span>📋</span> Show Sequence Timeline
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-sm btn-secondary" onclick="switchView('presentation')">
+                  🖥️ Present Show
+                </button>
+              </div>
+            </div>
+
+            <div class="sequence-list" id="sequenceList">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+
+          <!-- Quick Host Tips Card -->
+          <div class="card" style="background: #eef2ff; border-color: #c7d2fe;">
+            <h3 style="color: #4338ca; margin-bottom: 8px; font-size: 1.05rem;">💡 Stage & Zoom Presenter Guide:</h3>
+            <ul style="margin-left: 20px; font-size: 0.88rem; color: #3730a3; line-height: 1.6;">
+              <li><strong>Dual-Screen:</strong> Click <em>"↗️ Projector Screen"</em> to open the clean 100% full screen for your TV or Zoom Share.</li>
+              <li><strong>Zoom Instrumental Buzz:</strong> Participants open their buzzer link on phone or tab. You play the track, click <em>"🚨 Open Buzzers"</em>, and live reaction rankings appear instantly!</li>
+              <li><strong>Anchor Script:</strong> Switch to <em>"Anchor Script Pro"</em> to generate an editable MC speech or open the auto-scrolling Teleprompter!</li>
+            </ul>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 2: LIVE STAGE & PRESENTER CONSOLE
+         ==================================================================== -->
+    <section class="view-section" id="presentationView">
+      <div class="presentation-wrap">
+
+        <!-- Stage Viewport (Mirrored in Audience Window) -->
+        <div class="presentation-stage" id="presentationStage">
+          <!-- Rendered dynamically via renderStageContent() -->
+        </div>
+
+        <!-- Presenter Control Desk (Hidden from clean audience projector screen) -->
+        <div class="presenter-controls">
+          <div class="control-btn-group">
+            <button class="ctrl-btn" onclick="prevStageItem()" title="Shortcut: PgUp / P">⏮️ Prev Item</button>
+            <button class="ctrl-btn" onclick="nextStageItem()" title="Shortcut: PgDown / N">Next Item ⏭️</button>
+            <button class="ctrl-btn" onclick="prevLyricLine()" title="Shortcut: Left Arrow">◀️ Prev Lyric</button>
+            <button class="ctrl-btn" onclick="nextLyricLine()" title="Shortcut: Right Arrow / Space">Next Lyric / Reveal ▶️</button>
+            <button class="ctrl-btn" onclick="toggleQuizAnswer()" title="Shortcut: R">💡 Reveal Answer</button>
+            <button class="ctrl-btn btn-danger-ctrl" onclick="toggleBlackout()" title="Shortcut: B">⬛ Blackout</button>
+          </div>
+
+          <!-- Buzzer Specific Controls (Visible during buzz rounds) -->
+          <div class="control-btn-group">
+            <button class="ctrl-btn btn-success-ctrl" onclick="openBuzzersForRound()">🚨 Open Buzzers</button>
+            <button class="ctrl-btn" onclick="lockBuzzersForRound()">🔒 Lock Buzzers</button>
+            <button class="ctrl-btn" onclick="resetBuzzersForRound()">🔄 Reset Buzz</button>
+            <button class="ctrl-btn" onclick="playSynthesizedInstrumental('ddlj')" title="Play built-in mystery tune">🎶 Play Mystery Tune</button>
+            <button class="ctrl-btn" onclick="stopSynthesizedInstrumental()">⏹️ Stop Music</button>
+            <button class="ctrl-btn" onclick="simulateZoomParticipantsBuzzing()" title="Simulate 5 Zoom attendees buzzing in (for solo testing!)">🤖 Simulate Zoom Buzz</button>
+            <button class="ctrl-btn" onclick="copyZoomChatAnnouncement()" title="Copy Zoom Chat join message">📋 Copy Zoom Chat</button>
+          </div>
+
+          <div>
+            <span id="stageItemCounter" style="color: #a0aec0; font-size: 0.85rem; font-weight: bold;">Item 1 of 8</span>
+          </div>
+        </div>
+
+        <!-- Host Confidential Cue Box -->
+        <div class="host-cue-box" id="presenterCueBox">
+          <!-- Rendered dynamically -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 3: ANCHOR SCRIPT GENERATOR PRO & TELEPROMPTER
+         ==================================================================== -->
+    <section class="view-section" id="anchorScriptView">
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">
+            <span>📜</span> Anchor Script Generator Pro
+          </div>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button class="btn btn-primary btn-sm" onclick="generateAnchorScript()">
+              🔄 Re-Generate Script
+            </button>
+            <button class="btn btn-success btn-sm" onclick="openTeleprompter()">
+              📺 Open Teleprompter
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="downloadScriptTxt()">
+              💾 Download TXT
+            </button>
+            <button class="btn btn-secondary btn-sm" onclick="printAnchorScript()">
+              🖨️ Print / Save PDF
+            </button>
+          </div>
+        </div>
+
+        <p style="font-size: 0.88rem; color: #718096; margin-bottom: 12px;">
+          This script automatically incorporates your Event Theme, Custom Greeting, Singer Names, Locations, Song Titles, Confidential Quiz Answers, and Instrumental Buzzer rules. You can edit it freely below!
+        </p>
+
+        <textarea class="script-output-area" id="scriptOutputArea" placeholder="Click 'Re-Generate Script' to build your script..."></textarea>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 4: PARTICIPANT BUZZER VIEW (FOR ZOOM ATTENDEES)
+         ==================================================================== -->
+    <section class="view-section" id="buzzerGuestView">
+      <div class="buzzer-guest-wrap">
+        <h2 style="color: #667eea; margin-bottom: 4px; font-size: 1.6rem;">📱 Zoom Participant Buzzer</h2>
+        <p style="color: #718096; font-size: 0.85rem; margin-bottom: 20px;">
+          Keep this screen open during the instrumental round!
+        </p>
+
+        <!-- Guest Details -->
+        <div class="form-row" style="margin-bottom: 18px; text-align: left;">
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="guestParticipantName">Your Name:</label>
+            <input type="text" id="guestParticipantName" placeholder="e.g. Priya" value="Zoom Participant">
+          </div>
+          <div class="form-group" style="margin-bottom: 0;">
+            <label for="guestParticipantCity">Your City:</label>
+            <input type="text" id="guestParticipantCity" placeholder="e.g. San Jose, CA">
+          </div>
+        </div>
+
+        <!-- Status Pill -->
+        <div>
+          <span class="buzzer-status-pill status-waiting" id="guestBuzzerStatusPill">
+            🔒 BUZZERS LOCKED — LISTEN CLOSELY
+          </span>
+        </div>
+
+        <!-- Big Buzzer Button -->
+        <button class="big-buzzer-btn" id="bigBuzzerButton" disabled onclick="handleGuestBuzzClick()">
+          🔒<br>WAIT
+        </button>
+
+        <!-- Result Box -->
+        <div class="guest-result-box" id="guestResultBox">
+          <p style="color: #64748b; font-size: 0.9rem;">
+            When the Anchor plays the mystery instrumental track and unlocks the buzzer, tap the big red button above!
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ====================================================================
+         VIEW 5: LEADERBOARD & SCORES
+         ==================================================================== -->
+    <section class="view-section" id="leaderboardView">
+      <div class="grid-equal-two">
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>🏆</span> Participant Points & Rankings
+            </div>
+          </div>
+          <div id="leaderboardScoreList">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <span>📊</span> Scoring Rules
+            </div>
+          </div>
+          <div style="font-size: 0.9rem; color: #4a5568; line-height: 1.8;">
+            <p><strong>🚨 Instrumental Buzzer Round:</strong></p>
+            <ul style="margin-left: 20px; margin-bottom: 15px;">
+              <li>Rank #1 gets first opportunity to guess the song.</li>
+              <li>Correct guess: <span style="color: #16a34a; font-weight: bold;">+10 points</span></li>
+              <li>Incorrect guess: <span style="color: #dc2626; font-weight: bold;">-5 points</span> (Passes to Rank #2)</li>
+            </ul>
+
+            <p><strong>❓ Trivia Quiz Rounds:</strong></p>
+            <ul style="margin-left: 20px;">
+              <li>First correct answer in Zoom Chat: <span style="color: #16a34a; font-weight: bold;">+5 points</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ======================================================================
+       FULLSCREEN TELEPROMPTER MODAL
+       ====================================================================== -->
+  <div class="teleprompter-modal" id="teleprompterModal">
+    <div class="teleprompter-nav">
+      <div style="display: flex; align-items: center; gap: 15px;">
+        <span style="font-size: 1.2rem; font-weight: 800; color: #ffd700;">📺 Anchor Teleprompter</span>
+        <button class="btn btn-sm btn-primary" id="prompterPlayBtn" onclick="togglePrompterPlay()">▶️ Play</button>
+        <button class="btn btn-sm btn-secondary" onclick="changePrompterSpeed(-1)">Slower</button>
+        <span id="prompterSpeedDisplay" style="color: #ffd700; font-weight: bold;">2x</span>
+        <button class="btn btn-sm btn-secondary" onclick="changePrompterSpeed(1)">Faster</button>
+        <button class="btn btn-sm btn-secondary" onclick="changePrompterFontSize(-4)">A-</button>
+        <button class="btn btn-sm btn-secondary" onclick="changePrompterFontSize(4)">A+</button>
+        <button class="btn btn-sm btn-secondary" onclick="togglePrompterMirror()">🪞 Mirror Glass</button>
+      </div>
+      <div>
+        <button class="btn btn-sm btn-danger" onclick="closeTeleprompter()">✕ Close</button>
+      </div>
+    </div>
+    <div class="teleprompter-scroll-body" id="teleprompterBody">
+      <!-- Script content injected here -->
+    </div>
+  </div>
+
+  <!-- JavaScript Engine -->
+  <script src="app.js"></script>
+</body>
+</html>
