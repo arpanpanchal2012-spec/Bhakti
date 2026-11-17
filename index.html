@@ -3,15 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>DMHT Bhakti Studio</title>
-  <link rel="stylesheet" href="/studio/styles.css">
-  <link rel="stylesheet" href="/studio/theme.css">
+  <title>DMHT Bhakti Show Studio</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="theme.css">
 </head>
 <body>
 
   <!-- Top Sticky Header -->
   <header class="app-header">
     <div class="brand">
+      <div class="brand-icon">ॐ</div>
       <div class="brand-title">
         <h1>DMHT Bhakti Studio</h1>
         <p>Program • Projector • Anchor Script • Buzzer</p>
@@ -42,7 +43,9 @@
       <button class="quick-btn live-btn" onclick="openAudienceScreenWindow()" title="Open clean 100% full screen for TV, Projector or Zoom Window Share">
         Projector Screen
       </button>
-      
+      <button class="quick-btn success-btn" onclick="window.open('/buzzer/','DMHTOnlineBuzzer')" title="Open the online buzzer room for Zoom participants">
+        Online Buzzer
+      </button>
       <button class="quick-btn" onclick="exportShowPackage()" title="Export complete show data as JSON">
         Export
       </button>
@@ -136,14 +139,13 @@
               </span>
             </div>
 
-            <div class="form-group"><label for="segmentTemplate">Start from a template (optional)</label><select id="segmentTemplate"><option value="">Choose template</option><option value="song">Bhajan performance</option><option value="slide">Welcome slide</option><option value="quiz">Trivia question</option><option value="break">Intermission</option><option value="announcement">Announcement</option></select></div>
             <div class="form-group">
               <label for="itemTypeSelect">Segment Type:</label>
               <select id="itemTypeSelect">
                 <option value="song">🎤 Video Song (with Styled Lyrics)</option>
                 <option value="buzz">🚨 Instrumental Buzz Round (Zoom Guess the Song)</option>
                 <option value="quiz">❓ Trivia Quiz (Interactive Reveal)</option>
-                <option value="audio">🎵 Audio Track (without lyrics)</option>
+                <option value="audio">🎵 Audio Track (with Live Frequency Visualizer)</option>
                 <option value="slide">🖼️ Image Slide / Banner (with Caption)</option>
                 <option value="game">🎮 Party Game / Challenge</option>
                 <option value="break">☕ Short Break / Intermission</option>
@@ -171,10 +173,10 @@
 
             <!-- Media File Upload (Video, Audio, Slide Image) -->
             <div id="formMediaGroup" class="form-group">
-              <label for="itemMediaFile">Attach Local Media File <span class="hint">(video, audio, quiz image, or slide image)</span>:</label>
+              <label for="itemMediaFile">Attach Local Media File <span class="hint">(optional MP4 video, MP3 audio, or image slide)</span>:</label>
               <input type="file" id="itemMediaFile">
               <p style="font-size: 0.75rem; color: #718096; margin-top: 4px;">
-                Stored in this browser. Back up your media separately or use Backup with media.
+                💡 Stored offline in your browser's IndexedDB. Built-in synthesizer & sample backgrounds work automatically even without files!
               </p>
             </div>
 
@@ -185,16 +187,14 @@
                 <textarea id="itemLyricsInput" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea>
               </div>
 
-              <div class="form-group"><label for="globalLyricSize">Default lyric size for new songs</label><input type="range" id="globalLyricSize" min="32" max="120" step="4" value="64"><span id="globalLyricSizeValue">64px</span></div>
               <div class="form-group">
                 <label>Lyric Font Size:</label>
                 <div class="slider-container">
-                  <input type="range" id="itemLyricSizeInput" min="32" max="120" step="4" value="52">
+                  <input type="range" id="itemLyricSizeInput" min="28" max="78" value="52">
                   <div class="size-display" id="itemLyricSizeDisplay">52px</div>
                 </div>
               </div>
 
-              <div class="form-row"><div class="form-group"><label for="songGlowColor">Cinematic glow color (style 11)</label><input id="songGlowColor" type="color" value="#ff00ff"></div><div class="form-group"><label for="introSeconds">Song intro duration (seconds; 0 hides it)</label><input id="introSeconds" type="number" min="0" max="30" value="5"></div></div>
               <!-- 11 Lyric Styles Grid Selector -->
               <div class="form-group">
                 <label>Select Lyric Display Style (11 Pro Variations):</label>
@@ -268,7 +268,7 @@
             <!-- Instrumental Buzzer Fields Group -->
             <div id="formBuzzGroup" class="hide">
               <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px; margin-bottom: 12px; font-size: 0.85rem; color: #991b1b;">
-                <strong>Online buzzer:</strong> Create a room and control it from the Presenter screen.
+                🚨 <strong>Zoom Instrumental Buzzer:</strong> For remote attendees, use the online buzzer room link at the top of this page. Controls in this screen are for local rehearsal only.
               </div>
 
               <div class="form-row">
@@ -314,7 +314,6 @@
               </div>
             </div>
 
-            <div class="form-group"><label><input id="enableItemBuzzer" type="checkbox" style="width:auto;margin-right:8px"> Show online buzzer for this segment (optional)</label><span class="hint">Works for quizzes and all segment types. Create a room from the presenter screen.</span></div>
             <!-- Notes Group (Host confidential notes) -->
             <div class="form-group">
               <label for="itemNotesInput">Anchor / Presenter Notes <span class="hint">(confidential - visible to Host only)</span>:</label>
@@ -343,7 +342,6 @@
               </div>
             </div>
 
-            <div class="tools-row"><input id="sequenceSearch" type="search" placeholder="Search your program" aria-label="Search program"><button class="btn btn-secondary btn-sm" onclick="runPreflight()">Pre-show check</button><button class="btn btn-secondary btn-sm" onclick="backupWithMedia()">Backup with media</button><button class="btn btn-secondary btn-sm" onclick="document.getElementById('backupFile').click()">Restore backup</button><input id="backupFile" type="file" accept=".json,application/json" hidden onchange="restoreWithMedia(event)"></div><p class="hint">Standard Export contains show details only. Backup with media can create a very large file.</p><div id="preflightReport" role="status"></div>
             <div class="sequence-list" id="sequenceList">
               <!-- Rendered dynamically -->
             </div>
@@ -354,7 +352,7 @@
             <h3 style="color: #4338ca; margin-bottom: 8px; font-size: 1.05rem;">💡 Stage & Zoom Presenter Guide:</h3>
             <ul style="margin-left: 20px; font-size: 0.88rem; color: #3730a3; line-height: 1.6;">
               <li><strong>Dual-Screen:</strong> Click <em>"Projector Screen"</em> to open the clean 100% full screen for your TV or Zoom Share.</li>
-              <li><strong>Zoom Instrumental Buzz:</strong> Create a room and control the online buzzer from the Presenter screen.</li>
+              <li><strong>Zoom Instrumental Buzz:</strong> For remote participants, use the online buzzer room link at the top of the page. The controls below only work for local rehearsal.</li>
               <li><strong>Anchor Script:</strong> Open <em>Anchor Script</em> to generate an editable MC speech or open the auto-scrolling Teleprompter!</li>
             </ul>
           </div>
@@ -369,7 +367,6 @@
     <section class="view-section" id="presentationView">
       <div class="presentation-wrap">
 
-        <div class="host-dashboard" id="hostDashboard"><div><small>CURRENT SEGMENT</small><strong id="currentSegmentName">—</strong><span id="currentLyricCue"></span></div><div><small>UP NEXT</small><strong id="nextSegmentName">—</strong><span id="nextLyricCue"></span></div><div><small>ANCHOR NOTES · PRIVATE</small><span id="anchorCurrentCue">—</span></div></div>
         <!-- Stage Viewport (Mirrored in Audience Window) -->
         <div class="presentation-stage" id="presentationStage">
           <!-- Rendered dynamically via renderStageContent() -->
@@ -386,27 +383,17 @@
             <button class="ctrl-btn btn-danger-ctrl" onclick="toggleBlackout()" title="Shortcut: B">⬛ Blackout</button>
           </div>
 
-          <div class="host-online card" style="margin:14px 0;padding:16px;color:#242334">
-            <h3>Live participant buzzer · optional for any segment</h3>
-            <p>Create one room, share the participant link in Zoom, and control every round here.</p>
-            <div class="control-btn-group"><button class="ctrl-btn" onclick="createOnlineRoom()">Create room</button><button class="ctrl-btn" onclick="copyOnlineLink()">Copy participant link</button><button class="ctrl-btn" onclick="toggleOnlineProjection()">Show / hide participants on projector</button></div>
-            <p id="onlineRoomInfo">No online room created.</p><p id="onlineStatus" role="status"></p>
-            <div id="onlineHostRanking"></div>
-            <p style="font-size:.8rem">Rank is server receipt order; network and Zoom audio delays can affect fairness.</p>
-          </div>
-          <div class="host-media card" style="margin:14px 0;padding:16px;color:#242334"><h3>Attached media</h3><label><input id="mediaLoop" type="checkbox" style="width:auto"> Loop media</label><p id="hostMediaLabel">Select a segment with an attached audio or video file.</p><div id="hostMediaSlot"></div></div>
-          <!-- Buzzer Specific Controls -->
+          <!-- Buzzer Specific Controls (Visible during buzz rounds) -->
           <div class="control-btn-group">
             <button class="ctrl-btn btn-success-ctrl" onclick="openBuzzersForRound()">🚨 Open Buzzers</button>
             <button class="ctrl-btn" onclick="lockBuzzersForRound()">🔒 Lock Buzzers</button>
             <button class="ctrl-btn" onclick="resetBuzzersForRound()">🔄 Reset Buzz</button>
-            
-            
-            
-            
+            <button class="ctrl-btn" onclick="playSynthesizedInstrumental('ddlj')" title="Play built-in mystery tune">Play Test Tune</button>
+            <button class="ctrl-btn" onclick="stopSynthesizedInstrumental()">⏹️ Stop Music</button>
+            <button class="ctrl-btn" onclick="simulateZoomParticipantsBuzzing()" title="Local demo only">Demo Buzz (local)</button>
+            <button class="ctrl-btn" onclick="copyZoomChatAnnouncement()" title="Open the online buzzer room for Zoom">Online Buzzer Room</button>
           </div>
 
-          <p id="quizHostInstruction" style="color:#d4d9e4;font-size:.85rem"></p>
           <div>
             <span id="stageItemCounter" style="color: #a0aec0; font-size: 0.85rem; font-weight: bold;">Item 1 of 8</span>
           </div>
@@ -429,7 +416,7 @@
             <span>📜</span> Anchor Script Generator Pro
           </div>
           <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button class="btn btn-primary btn-sm" onclick="if(!appData.scriptText || confirm('Replace the current anchor script?')) generateAnchorScript()">
+            <button class="btn btn-primary btn-sm" onclick="generateAnchorScript()">
               🔄 Re-Generate Script
             </button>
             <button class="btn btn-success btn-sm" onclick="openTeleprompter()">
@@ -561,8 +548,6 @@
   </div>
 
   <!-- JavaScript Engine -->
-  <script src="/studio/app.js"></script>
-  <script src="/studio/integration.js?v=studio-3"></script>
-  <script src="/studio/enhancements.js?v=studio-3"></script>
-</body>
+  <script src="app.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a5c21d0cfff8ea80',t:'MTc5NDk1MzkyOQ=='};var l=window.parent.location,o;try{o=new URL(l.origin).origin}catch(e){try{o=new URL(new URL(l.href).origin).origin}catch(e){o=''}}var u='/cdn-cgi/challenge-platform/scripts/jsd/main.js?ray=a5c21d0cfff8ea80',a=document.createElement('script');a.src=o?new URL(u,o).href:u;document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
