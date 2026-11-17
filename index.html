@@ -4,10 +4,10 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Show Studio Pro - Stage, Anchor & Zoom Instrumental Buzzer</title>
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="/studio/styles.css">
 </head>
 <body>
-  <div style="padding:12px 20px;background:#fff5d5;color:#4b3a13;text-align:center">For real Zoom participants, use the <a href="/" target="_blank" rel="noopener">online buzzer room</a>. The attendee view inside this app is a local-device rehearsal only.</div>
+  <div style="padding:12px 20px;background:#fff5d5;color:#4b3a13;text-align:center">For real Zoom participants, use the <a href="/buzzer/" target="_blank" rel="noopener">online buzzer room</a>. The attendee view inside this app is a local-device rehearsal only.</div>
 
   <!-- Top Sticky Header -->
   <header class="app-header">
@@ -31,7 +31,7 @@
         📜 Anchor Script Pro
       </button>
       <button class="nav-btn" id="navBuzzerGuest" onclick="switchView('buzzerGuest')">
-        📱 Zoom Buzzer (Attendee View)
+        📱 Local Buzzer Rehearsal
       </button>
       <button class="nav-btn" id="navLeaderboard" onclick="switchView('leaderboard')">
         🏆 Leaderboard Scores
@@ -43,8 +43,8 @@
       <button class="quick-btn live-btn" onclick="openAudienceScreenWindow()" title="Open clean 100% full screen for TV, Projector or Zoom Window Share">
         ↗️ Projector Screen
       </button>
-      <button class="quick-btn success-btn" onclick="openParticipantBuzzerWindow()" title="Open attendee buzzer in a separate popup tab">
-        📱 Attendee Buzzer Tab
+      <button class="quick-btn success-btn" onclick="openParticipantBuzzerWindow()" title="Open a local-only rehearsal buzzer">
+        📱 Local Buzzer Test
       </button>
       <button class="quick-btn" onclick="exportShowPackage()" title="Export complete show data as JSON">
         💾 Export Show
@@ -257,7 +257,7 @@
             <!-- Instrumental Buzzer Fields Group -->
             <div id="formBuzzGroup" class="hide">
               <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px; margin-bottom: 12px; font-size: 0.85rem; color: #991b1b;">
-                🚨 <strong>Zoom Instrumental Buzzer:</strong> Attendees open their buzzer link, listen to the mystery tune, and buzz in. The host console automatically ranks buzzers in real time with millisecond precision!
+                🚨 <strong>Zoom Instrumental Buzzer:</strong> For remote attendees, use the online buzzer room link at the top of this page. Controls in this screen are for local rehearsal only.
               </div>
 
               <div class="form-row">
@@ -341,7 +341,7 @@
             <h3 style="color: #4338ca; margin-bottom: 8px; font-size: 1.05rem;">💡 Stage & Zoom Presenter Guide:</h3>
             <ul style="margin-left: 20px; font-size: 0.88rem; color: #3730a3; line-height: 1.6;">
               <li><strong>Dual-Screen:</strong> Click <em>"↗️ Projector Screen"</em> to open the clean 100% full screen for your TV or Zoom Share.</li>
-              <li><strong>Zoom Instrumental Buzz:</strong> Participants open their buzzer link on phone or tab. You play the track, click <em>"🚨 Open Buzzers"</em>, and live reaction rankings appear instantly!</li>
+              <li><strong>Zoom Instrumental Buzz:</strong> For remote participants, use the online buzzer room link at the top of the page. The controls below only work for local rehearsal.</li>
               <li><strong>Anchor Script:</strong> Switch to <em>"Anchor Script Pro"</em> to generate an editable MC speech or open the auto-scrolling Teleprompter!</li>
             </ul>
           </div>
@@ -537,6 +537,6 @@
   </div>
 
   <!-- JavaScript Engine -->
-  <script src="app.js"></script>
+  <script src="/studio/app.js"></script>
 </body>
 </html>

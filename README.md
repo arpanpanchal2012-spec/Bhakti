@@ -6,8 +6,8 @@ A browser-based show manager and a separate shared online buzzer. Show Studio ma
 
 1. Create a GitHub repository. Upload **the contents of this folder** to its root. Ensure `render.yaml`, `index.html`, `app.js`, `styles.css`, and the `buzzer` folder are visible at the top level. Do not upload only the ZIP file.
 2. On Render, choose **New → Blueprint**, connect your GitHub account, and select the repository. Render reads `render.yaml`. Follow the prompts to create the web service and choose an available plan.
-3. Wait for the build and deployment to finish. Open the public service URL Render provides. This opens the **live buzzer**.
-4. Open the same URL with `/studio/` at the end to use **Show Studio**. The banner in Show Studio links to the online buzzer.
+3. Wait for the build and deployment to finish. Open the public service URL Render provides. This opens **Show Studio**.
+4. Use the **online buzzer room** link at the top of Show Studio to open the online buzzer.
 
 Alternatively, create a Render **Web Service** from your repository and set:
 - Language/runtime: Python
@@ -18,7 +18,7 @@ Render provides the `PORT` environment variable; the server listens on `0.0.0.0`
 
 ## Use it with Zoom
 
-1. Visit the deployment's main URL and click **Create host room**.
+1. Visit the deployment's main URL, select **online buzzer room**, and click **Create host room**.
 2. Copy the **participant link** displayed on the host page and paste it into Zoom chat. Keep the host URL private; it contains the key that controls the room.
 3. Participants open the link on their computer or phone, enter their names, and remain in Zoom to hear the instrumental.
 4. Share the music in Zoom using Zoom's computer-audio sharing. In the buzzer host page, press **Open buzzers**. Ranking is based on server receipt order. Press **Lock** to stop new buzzes and **Reset round** before the next question.
@@ -33,7 +33,7 @@ Install Python 3.9 or newer. In the folder containing this README, run:
 python buzzer/server.py
 ```
 
-If needed use `python3` instead. Visit `http://localhost:8080/` for the buzzer and `http://localhost:8080/studio/` for Show Studio. `localhost` cannot be used by remote Zoom participants; deploy publicly first.
+If needed use `python3` instead. Visit `http://localhost:8080/` for Show Studio and `http://localhost:8080/buzzer/` for the buzzer. `localhost` cannot be used by remote Zoom participants; deploy publicly first.
 
 ## Important limitations
 
