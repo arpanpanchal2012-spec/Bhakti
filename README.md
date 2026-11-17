@@ -42,3 +42,11 @@ If needed use `python3` instead. Visit `http://localhost:8080/` for Show Studio 
 - **Fairness:** The server ranks requests by receipt, not by when people heard the audio or pressed the button. Internet latency, Zoom audio latency, and polling delays matter. Displayed times are from the host opening the round, not reliable contestant reaction times.
 - **Privacy & security:** Anyone with a participant link can join and see names; anyone with a host URL can control the room. Use first names or nicknames. There are no accounts, moderation, persistent database, rate limits, automatic room expiry, or protection against determined cheating. One buzz per browser identifier is a convenience, not identity verification. This prototype is for trusted groups, not high-stakes or large public events.
 - **Browser limitations:** Use a modern browser with JavaScript and local storage enabled. Keep pages open and test a complete round before going live.
+
+## Host-controlled online buzzer and media
+
+In Stage & Presenter, choose **Create room**, then copy the participant link into Zoom chat. Guests enter their name and press **Join round**. The host sees the joined list and can use Open Buzzers, Lock, and Reset from this same screen. The projector can show the joined list and server-ranked buzzes. Use **Show / hide participants on projector** to return to the question. When editing any segment, check **Show online buzzer for this segment** if you want the list shown automatically when presenting it. Opening or resetting a round also shows the list; hide it to see the quiz.
+
+Attach an audio/video file when adding or editing a segment. Select the segment on the presenter screen, then use its **Attached media** player. For song video, the host player supplies the audio and the projector shows a muted synchronized video. In Zoom, share the projector window and enable computer audio sharing. Browser autoplay, audio routing and video synchronization vary: test on the exact equipment before an event. Song names are shown briefly and lyrics are advanced manually.
+
+This integrated version uses browser-local messaging between host and projector on the same browser/device and internet polling for guests. Scores remain separate from the live buzzer rankings. Rooms are temporary and must use a single server instance.

@@ -313,6 +313,7 @@
               </div>
             </div>
 
+            <div class="form-group"><label><input id="enableItemBuzzer" type="checkbox" style="width:auto;margin-right:8px"> Show online buzzer for this segment (optional)</label><span class="hint">Works for quizzes and all segment types. Create a room from the presenter screen.</span></div>
             <!-- Notes Group (Host confidential notes) -->
             <div class="form-group">
               <label for="itemNotesInput">Anchor / Presenter Notes <span class="hint">(confidential - visible to Host only)</span>:</label>
@@ -382,15 +383,24 @@
             <button class="ctrl-btn btn-danger-ctrl" onclick="toggleBlackout()" title="Shortcut: B">⬛ Blackout</button>
           </div>
 
-          <!-- Buzzer Specific Controls (Visible during buzz rounds) -->
+          <div class="host-online card" style="margin:14px 0;padding:16px;color:#242334">
+            <h3>Live participant buzzer · optional for any segment</h3>
+            <p>Create one room, share the participant link in Zoom, and control every round here.</p>
+            <div class="control-btn-group"><button class="ctrl-btn" onclick="createOnlineRoom()">Create room</button><button class="ctrl-btn" onclick="copyOnlineLink()">Copy participant link</button><button class="ctrl-btn" onclick="toggleOnlineProjection()">Show / hide participants on projector</button></div>
+            <p id="onlineRoomInfo">No online room created.</p><p id="onlineStatus" role="status"></p>
+            <div id="onlineHostRanking"></div>
+            <p style="font-size:.8rem">Rank is server receipt order; network and Zoom audio delays can affect fairness.</p>
+          </div>
+          <div class="host-media card" style="margin:14px 0;padding:16px;color:#242334"><h3>Attached media</h3><p id="hostMediaLabel">Select a segment with an attached audio or video file.</p><div id="hostMediaSlot"></div></div>
+          <!-- Buzzer Specific Controls -->
           <div class="control-btn-group">
             <button class="ctrl-btn btn-success-ctrl" onclick="openBuzzersForRound()">🚨 Open Buzzers</button>
             <button class="ctrl-btn" onclick="lockBuzzersForRound()">🔒 Lock Buzzers</button>
             <button class="ctrl-btn" onclick="resetBuzzersForRound()">🔄 Reset Buzz</button>
-            <button class="ctrl-btn" onclick="playSynthesizedInstrumental('ddlj')" title="Play built-in mystery tune">Play Test Tune</button>
-            <button class="ctrl-btn" onclick="stopSynthesizedInstrumental()">⏹️ Stop Music</button>
-            <button class="ctrl-btn" onclick="simulateZoomParticipantsBuzzing()" title="Local demo only">Demo Buzz (local)</button>
-            <button class="ctrl-btn" onclick="copyZoomChatAnnouncement()" title="Open the online buzzer room for Zoom">Online Buzzer Room</button>
+            
+            
+            
+            
           </div>
 
           <div>
@@ -548,5 +558,6 @@
 
   <!-- JavaScript Engine -->
   <script src="/studio/app.js"></script>
+  <script src="/studio/integration.js"></script>
 </body>
 </html>

@@ -679,6 +679,7 @@ function editSequenceItem(index) {
   document.getElementById('itemSingerInput').value = item.singer || '';
   document.getElementById('itemLocationInput').value = item.location || '';
   document.getElementById('itemNotesInput').value = item.notes || '';
+  document.getElementById('enableItemBuzzer').checked = !!item.enableBuzzer;
 
   // Type specific fields
   if (item.type === 'song') {
@@ -745,6 +746,7 @@ function resetItemForm() {
   document.getElementById('itemSingerInput').value = '';
   document.getElementById('itemLocationInput').value = '';
   document.getElementById('itemNotesInput').value = '';
+  document.getElementById('enableItemBuzzer').checked = false;
   document.getElementById('itemLyricsInput').value = '';
   document.getElementById('quizOptionsInput').value = '';
   document.getElementById('buzzMysteryTitle').value = '';
@@ -795,7 +797,8 @@ async function handleSaveItem() {
     singer: document.getElementById('itemSingerInput').value.trim(),
     location: document.getElementById('itemLocationInput').value.trim(),
     notes: document.getElementById('itemNotesInput').value.trim(),
-    mediaFileName: mediaFileName
+    mediaFileName: mediaFileName,
+    enableBuzzer: document.getElementById('enableItemBuzzer').checked
   };
 
   // Type specific additions
