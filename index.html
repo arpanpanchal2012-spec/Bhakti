@@ -3,56 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Show Studio Pro - Stage, Anchor & Zoom Instrumental Buzzer</title>
+  <title>DMHT Bhakti Studio</title>
   <link rel="stylesheet" href="/studio/styles.css">
+  <link rel="stylesheet" href="/studio/theme.css">
 </head>
 <body>
-  <div style="padding:12px 20px;background:#fff5d5;color:#4b3a13;text-align:center">For real Zoom participants, use the <a href="/buzzer/" target="_blank" rel="noopener">online buzzer room</a>. The attendee view inside this app is a local-device rehearsal only.</div>
 
   <!-- Top Sticky Header -->
   <header class="app-header">
     <div class="brand">
-      <div class="brand-icon">🎤</div>
       <div class="brand-title">
-        <h1>Show Studio Pro</h1>
-        <p>Multi-Singer Presentation • Anchor Script • Zoom Instrumental Buzzer</p>
+        <h1>DMHT Bhakti Studio</h1>
+        <p>Program • Projector • Anchor Script • Buzzer</p>
       </div>
     </div>
 
     <!-- Navigation Tabs -->
     <nav class="nav-tabs">
       <button class="nav-btn active" id="navSetup" onclick="switchView('setup')">
-        📋 Playlist Setup
+        Program
       </button>
       <button class="nav-btn" id="navPresentation" onclick="switchView('presentation')">
-        🖥️ Stage & Presenter
+        Presenter
       </button>
       <button class="nav-btn" id="navAnchorScript" onclick="switchView('anchorScript')">
-        📜 Anchor Script Pro
+        Anchor Script
       </button>
       <button class="nav-btn" id="navBuzzerGuest" onclick="switchView('buzzerGuest')">
-        📱 Local Buzzer Rehearsal
+        Buzzer Test
       </button>
       <button class="nav-btn" id="navLeaderboard" onclick="switchView('leaderboard')">
-        🏆 Leaderboard Scores
+        Scores
       </button>
     </nav>
 
     <!-- Header Action Buttons -->
     <div class="header-actions">
       <button class="quick-btn live-btn" onclick="openAudienceScreenWindow()" title="Open clean 100% full screen for TV, Projector or Zoom Window Share">
-        ↗️ Projector Screen
+        Projector Screen
       </button>
-      <button class="quick-btn success-btn" onclick="openParticipantBuzzerWindow()" title="Open a local-only rehearsal buzzer">
-        📱 Local Buzzer Test
+      <button class="quick-btn success-btn" onclick="window.open('/buzzer/','DMHTOnlineBuzzer')" title="Open the online buzzer room for Zoom participants">
+        Online Buzzer
       </button>
       <button class="quick-btn" onclick="exportShowPackage()" title="Export complete show data as JSON">
-        💾 Export Show
+        Export
       </button>
       <button class="quick-btn" onclick="triggerImportFile()" title="Import an existing show JSON">
-        📂 Import Show
+        Import
       </button>
-      <span id="saveStatusIndicator" style="font-size: 0.8rem; color: #a5b4fc; opacity: 0.7;">Auto-saved</span>
+      <span id="saveStatusIndicator" style="font-size: 0.8rem; color: #a5b4fc; opacity: 0.7;">Saved</span>
     </div>
   </header>
 
@@ -92,18 +91,18 @@
           <div class="card">
             <div class="card-header">
               <div class="card-title">
-                <span>🎭</span> Event Theme & Anchor Settings
+                Event Settings
               </div>
             </div>
 
             <div class="form-group">
               <label for="eventNameInput">Event Name:</label>
-              <input type="text" id="eventNameInput" placeholder="e.g. Melody Junction 2026 - Live Musical Evening">
+              <input type="text" id="eventNameInput" placeholder="e.g. DMHT Bhakti">
             </div>
 
             <div class="form-group">
               <label for="eventThemeInput">Event Theme / Occasion:</label>
-              <input type="text" id="eventThemeInput" placeholder="e.g. Bollywood & Retro Melodies Across Cities">
+              <input type="text" id="eventThemeInput" placeholder="e.g. Bhakti Sandhya">
             </div>
 
             <div class="form-group">
@@ -112,8 +111,19 @@
             </div>
 
             <div class="form-group">
-              <label for="customGreetingInput">Custom Opening Greeting <span class="hint">(optional / e.g. JSCA, Namaste)</span>:</label>
-              <input type="text" id="customGreetingInput" placeholder="e.g. Namaste, Vanakkam, and a very warm welcome to everyone joining!">
+              <label for="customGreetingInput">Custom Opening Greeting <span class="hint">(optional)</span>:</label>
+              <input type="text" id="customGreetingInput" placeholder="e.g. Hari Om, and a warm welcome to everyone">
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="projectorTitleInput">Projector Welcome Title:</label>
+                <input type="text" id="projectorTitleInput" placeholder="Welcome to DMHT Bhakti">
+              </div>
+              <div class="form-group">
+                <label for="projectorSubtitleInput">Projector Subtitle <span class="hint">(optional)</span>:</label>
+                <input type="text" id="projectorSubtitleInput" placeholder="Optional line below the title">
+              </div>
             </div>
           </div>
 
@@ -145,14 +155,14 @@
 
             <div class="form-group">
               <label for="itemTitleInput">Segment Title / Question / Song Name:</label>
-              <input type="text" id="itemTitleInput" placeholder="e.g. Pehla Nasha or Guess the 90s Blockbuster Hook">
+              <input type="text" id="itemTitleInput" placeholder="e.g. Opening Bhajan or Guess the Bhajan">
             </div>
 
             <!-- Performer Group (Song / Audio) -->
             <div id="formPerformerGroup" class="form-row">
               <div class="form-group">
                 <label for="itemSingerInput">Singer / Performer Name:</label>
-                <input type="text" id="itemSingerInput" placeholder="e.g. Priya Sharma">
+                <input type="text" id="itemSingerInput" placeholder="Singer name">
               </div>
               <div class="form-group">
                 <label for="itemLocationInput">Performer City / Location <span class="hint">(optional)</span>:</label>
@@ -173,7 +183,7 @@
             <div id="formLyricsGroup">
               <div class="form-group">
                 <label for="itemLyricsInput">Lyrics <span class="hint">(one line per line break - advances with Arrow keys)</span>:</label>
-                <textarea id="itemLyricsInput" placeholder="Pehla nasha, pehla khumar&#10;Naya pyaar hai, naya intezaar&#10;Kar loon main kya apna haal"></textarea>
+                <textarea id="itemLyricsInput" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea>
               </div>
 
               <div class="form-group">
@@ -240,7 +250,7 @@
             <div id="formQuizGroup" class="hide">
               <div class="form-group">
                 <label for="quizOptionsInput">Answer Options <span class="hint">(one option per line, up to 4)</span>:</label>
-                <textarea id="quizOptionsInput" placeholder="Lata Mangeshkar&#10;Asha Bhosle&#10;Geeta Dutt&#10;Kishore Kumar"></textarea>
+                <textarea id="quizOptionsInput" placeholder="Option A&#10;Option B&#10;Option C&#10;Option D"></textarea>
               </div>
 
               <div class="form-group">
@@ -263,22 +273,22 @@
               <div class="form-row">
                 <div class="form-group">
                   <label for="buzzMysteryTitle">Correct Song Title:</label>
-                  <input type="text" id="buzzMysteryTitle" placeholder="e.g. Tujhe Dekha Toh Yeh Jaana Sanam">
+                  <input type="text" id="buzzMysteryTitle" placeholder="Correct bhajan / title">
                 </div>
                 <div class="form-group">
-                  <label for="buzzFilmName">Film / Movie / Album:</label>
-                  <input type="text" id="buzzFilmName" placeholder="e.g. DDLJ (1995)">
+                  <label for="buzzFilmName">Album / Source (optional):</label>
+                  <input type="text" id="buzzFilmName" placeholder="Optional">
                 </div>
               </div>
 
               <div class="form-row">
                 <div class="form-group">
-                  <label for="buzzOriginalSinger">Original Singers / Music Director:</label>
-                  <input type="text" id="buzzOriginalSinger" placeholder="e.g. Kumar Sanu & Lata Mangeshkar">
+                  <label for="buzzOriginalSinger">Original Singer / Composer (optional):</label>
+                  <input type="text" id="buzzOriginalSinger" placeholder="Optional">
                 </div>
                 <div class="form-group">
                   <label for="buzzHintsInput">Host Clues / Hints:</label>
-                  <input type="text" id="buzzHintsInput" placeholder="e.g. Mandolin intro, Swiss mustard fields">
+                  <input type="text" id="buzzHintsInput" placeholder="Optional hint">
                 </div>
               </div>
             </div>
@@ -287,7 +297,7 @@
             <div id="formSlideGroup" class="hide">
               <div class="form-group">
                 <label for="slideCaptionInput">Slide Subtitle / Banner Text:</label>
-                <input type="text" id="slideCaptionInput" placeholder="e.g. Live Musical Evening & Instrumental Trivia">
+                <input type="text" id="slideCaptionInput" placeholder="Optional subtitle">
               </div>
             </div>
 
@@ -295,11 +305,11 @@
             <div id="formGameGroup" class="hide">
               <div class="form-group">
                 <label for="gameRulesInput">Game Rules & Instructions:</label>
-                <textarea id="gameRulesInput" placeholder="e.g. 15 seconds to sing a song starting with the last letter..."></textarea>
+                <textarea id="gameRulesInput" placeholder="Rules for this segment"></textarea>
               </div>
               <div class="form-group">
                 <label for="gamePrizesInput">Prizes & Incentives:</label>
-                <input type="text" id="gamePrizesInput" placeholder="e.g. Amazon Gift Voucher + Winner Badge">
+                <input type="text" id="gamePrizesInput" placeholder="Optional">
               </div>
             </div>
 
@@ -340,9 +350,9 @@
           <div class="card" style="background: #eef2ff; border-color: #c7d2fe;">
             <h3 style="color: #4338ca; margin-bottom: 8px; font-size: 1.05rem;">💡 Stage & Zoom Presenter Guide:</h3>
             <ul style="margin-left: 20px; font-size: 0.88rem; color: #3730a3; line-height: 1.6;">
-              <li><strong>Dual-Screen:</strong> Click <em>"↗️ Projector Screen"</em> to open the clean 100% full screen for your TV or Zoom Share.</li>
+              <li><strong>Dual-Screen:</strong> Click <em>"Projector Screen"</em> to open the clean 100% full screen for your TV or Zoom Share.</li>
               <li><strong>Zoom Instrumental Buzz:</strong> For remote participants, use the online buzzer room link at the top of the page. The controls below only work for local rehearsal.</li>
-              <li><strong>Anchor Script:</strong> Switch to <em>"Anchor Script Pro"</em> to generate an editable MC speech or open the auto-scrolling Teleprompter!</li>
+              <li><strong>Anchor Script:</strong> Open <em>Anchor Script</em> to generate an editable MC speech or open the auto-scrolling Teleprompter!</li>
             </ul>
           </div>
         </div>
@@ -377,10 +387,10 @@
             <button class="ctrl-btn btn-success-ctrl" onclick="openBuzzersForRound()">🚨 Open Buzzers</button>
             <button class="ctrl-btn" onclick="lockBuzzersForRound()">🔒 Lock Buzzers</button>
             <button class="ctrl-btn" onclick="resetBuzzersForRound()">🔄 Reset Buzz</button>
-            <button class="ctrl-btn" onclick="playSynthesizedInstrumental('ddlj')" title="Play built-in mystery tune">🎶 Play Mystery Tune</button>
+            <button class="ctrl-btn" onclick="playSynthesizedInstrumental('ddlj')" title="Play built-in mystery tune">Play Test Tune</button>
             <button class="ctrl-btn" onclick="stopSynthesizedInstrumental()">⏹️ Stop Music</button>
-            <button class="ctrl-btn" onclick="simulateZoomParticipantsBuzzing()" title="Simulate 5 Zoom attendees buzzing in (for solo testing!)">🤖 Simulate Zoom Buzz</button>
-            <button class="ctrl-btn" onclick="copyZoomChatAnnouncement()" title="Copy Zoom Chat join message">📋 Copy Zoom Chat</button>
+            <button class="ctrl-btn" onclick="simulateZoomParticipantsBuzzing()" title="Local demo only">Demo Buzz (local)</button>
+            <button class="ctrl-btn" onclick="copyZoomChatAnnouncement()" title="Open the online buzzer room for Zoom">Online Buzzer Room</button>
           </div>
 
           <div>
@@ -421,7 +431,7 @@
         </div>
 
         <p style="font-size: 0.88rem; color: #718096; margin-bottom: 12px;">
-          This script automatically incorporates your Event Theme, Custom Greeting, Singer Names, Locations, Song Titles, Confidential Quiz Answers, and Instrumental Buzzer rules. You can edit it freely below!
+          Generated from your event settings and program. Edit it freely below.
         </p>
 
         <textarea class="script-output-area" id="scriptOutputArea" placeholder="Click 'Re-Generate Script' to build your script..."></textarea>
@@ -442,7 +452,7 @@
         <div class="form-row" style="margin-bottom: 18px; text-align: left;">
           <div class="form-group" style="margin-bottom: 0;">
             <label for="guestParticipantName">Your Name:</label>
-            <input type="text" id="guestParticipantName" placeholder="e.g. Priya" value="Zoom Participant">
+            <input type="text" id="guestParticipantName" placeholder="Your name" value="">
           </div>
           <div class="form-group" style="margin-bottom: 0;">
             <label for="guestParticipantCity">Your City:</label>

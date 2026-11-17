@@ -1,0 +1,74 @@
+/* DMHT Bhakti Studio — professional theme (overrides styles.css) */
+:root{
+  --primary:#9a3412; --primary-dark:#7c2d12; --secondary:#475569; --accent:#f5c451;
+  --ink:#1e293b; --muted:#64748b; --line:#e5e7eb; --surface:#ffffff; --canvas:#f6f5f2;
+  --shadow:0 1px 2px rgba(15,23,42,.05),0 1px 3px rgba(15,23,42,.06);
+  --radius:8px; --radius-lg:10px;
+  --font-main:Inter,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+}
+body{background:var(--canvas);color:var(--ink);font-family:var(--font-main);}
+
+/* Header: static, never floats */
+.app-header{position:static !important;background:var(--surface);color:var(--ink);backdrop-filter:none;
+  box-shadow:none;border-bottom:1px solid var(--line);padding:14px 28px;gap:20px;flex-wrap:wrap;}
+.brand-icon{background:#fff7ed;color:var(--primary);border:1px solid #fed7aa;box-shadow:none;font-size:22px;
+  width:42px;height:42px;display:flex;align-items:center;justify-content:center;padding:0;border-radius:8px;font-weight:700;}
+.brand-title h1{background:none;-webkit-text-fill-color:var(--ink);color:var(--ink);font-size:1.15rem;font-weight:700;letter-spacing:-.01em;}
+.brand-title p{color:var(--muted);font-size:.78rem;}
+.nav-tabs{background:#f1f0ec;border-radius:8px;padding:3px;gap:2px;}
+.nav-btn{color:#475569;padding:7px 16px;font-size:.88rem;font-weight:600;border-radius:6px;}
+.nav-btn:hover{background:#e7e5df;color:var(--ink);}
+.nav-btn.active{background:var(--surface);color:var(--primary);box-shadow:0 1px 2px rgba(0,0,0,.08);}
+.header-actions{gap:8px;flex-wrap:wrap;}
+.quick-btn{background:var(--surface);color:var(--ink);border:1px solid #d6d3cd;font-weight:600;font-size:.83rem;padding:7px 12px;border-radius:6px;}
+.quick-btn:hover{background:#f8f7f4;transform:none;}
+.quick-btn.live-btn{background:var(--primary);border-color:var(--primary);color:#fff;}
+.quick-btn.live-btn:hover{background:var(--primary-dark);}
+.quick-btn.success-btn{background:#fff;color:var(--primary);border-color:#fdba74;}
+#saveStatusIndicator{color:var(--muted) !important;}
+
+/* Soundboard only in Presenter view, as a quiet static strip */
+.soundboard-bar{display:none;position:static;background:var(--surface);color:var(--muted);border-bottom:1px solid var(--line);padding:8px 28px;flex-wrap:wrap;}
+body[data-view="presentation"] .soundboard-bar{display:flex;}
+.soundboard-title{color:var(--muted);font-size:.72rem;letter-spacing:.06em;}
+.sfx-btn{background:#f8f7f4;color:var(--ink);border:1px solid var(--line);border-radius:6px;}
+.sfx-btn:hover{background:#efede8;}
+
+/* Content */
+.app-container{padding:24px 28px;}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-lg);box-shadow:var(--shadow);padding:22px;}
+.card-header{border-bottom:1px solid var(--line);margin-bottom:18px;padding-bottom:12px;}
+.card-title{color:var(--ink);font-size:1rem;font-weight:700;}
+.card-title span{display:none;}
+label{color:#334155;font-weight:600;font-size:.84rem;}
+input[type=text],input[type=number],textarea,select{border:1px solid #d6d3cd !important;border-radius:6px !important;background:#fff;}
+input:focus,textarea:focus,select:focus{outline:none;border-color:var(--primary) !important;box-shadow:0 0 0 3px rgba(154,52,18,.12) !important;}
+.btn{border-radius:6px;font-weight:600;box-shadow:none;}
+.btn:hover{transform:none;box-shadow:none;}
+.btn-primary{background:var(--primary);}
+.btn-primary:hover{background:var(--primary-dark);}
+.btn-secondary{background:#fff;color:var(--ink);border:1px solid #d6d3cd;}
+.btn-secondary:hover{background:#f8f7f4;}
+.ctrl-btn{border-radius:6px;}
+.style-option{border-radius:8px;}
+.style-option.selected{border-color:var(--primary) !important;background:#fff7ed !important;}
+
+/* Projector slide */
+.stage-slide-caption{font-size:clamp(2rem,5vw,4rem);color:var(--accent);font-weight:700;line-height:1.2;text-shadow:0 2px 12px rgba(0,0,0,.6);text-align:center;padding:0 6%;}
+.stage-slide-sub{font-size:clamp(1.1rem,2.2vw,1.8rem);color:#e2e8f0;margin-top:14px;text-align:center;}
+
+@media (max-width:1024px){
+  .app-header{padding:12px 16px;}
+  .app-container{padding:16px;}
+  .nav-tabs{overflow-x:auto;}
+  .nav-btn{white-space:nowrap;}
+  .soundboard-bar{padding:8px 16px;}
+}
+.quick-btn.live-btn{animation:none !important;box-shadow:none !important;}
+.grid-two-col>*,.grid-wide-right>*,.grid-equal-two>*{min-width:0;}
+@media (max-width:700px){
+  .form-row{display:grid !important;grid-template-columns:1fr !important;gap:0 !important;}
+  .card{padding:16px;}
+  .sequence-item,.seq-item{flex-wrap:wrap;}
+  .presenter-controls{flex-wrap:wrap;}
+}

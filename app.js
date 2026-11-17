@@ -7,7 +7,8 @@
 // -----------------------------------------------------------------------------
 // Global State & Storage Keys
 // -----------------------------------------------------------------------------
-const STORAGE_KEY = 'show_studio_pro_data_v2';
+const STORAGE_KEY = 'show_studio_bhakti_data_v3';
+const LEGACY_STORAGE_KEY = 'show_studio_pro_data_v2';
 const CHANNEL_NAME = 'show_studio_channel_v2';
 
 let appChannel = null;
@@ -17,132 +18,67 @@ try {
   console.warn('BroadcastChannel not supported in this browser environment');
 }
 
-// Default Show Data
+// Default Show Data (DMHT Bhakti)
 const defaultShowData = {
   eventInfo: {
-    eventName: 'Melody Junction 2026 - Live Musical Evening',
-    eventTheme: 'Bollywood & Retro Melodies Across Cities',
-    themeDescription: 'A live interactive musical showcase featuring talented singers joining from San Jose, Boston, London, and Mumbai, complete with live instrumental buzzer trivia rounds for our audience!',
-    customGreeting: 'Namaste, Vanakkam, and a very warm welcome to everyone joining us on Zoom and in the auditorium!'
+    eventName: 'DMHT Bhakti',
+    eventTheme: 'Bhakti Sandhya',
+    themeDescription: '',
+    customGreeting: '',
+    projectorTitle: 'Welcome to DMHT Bhakti',
+    projectorSubtitle: ''
   },
   globalSettings: {
     defaultLyricSize: 52,
-    defaultLyricStyle: 1
+    defaultLyricStyle: 4
   },
   items: [
     {
       id: 'item-welcome-1',
       type: 'slide',
-      title: 'Welcome to Melody Junction 2026',
+      useProjectorTitle: true,
+      title: 'Welcome to DMHT Bhakti',
       singer: '',
       location: '',
-      slideCaption: 'Live Musical Evening & Instrumental Trivia',
-      slideColor: 'linear-gradient(135deg, #1e1b4b 0%, #312e81 100%)',
-      notes: 'Play welcoming soft background music while participants and Zoom attendees settle in.'
+      slideCaption: '',
+      notes: 'Welcome screen. Edit the projector text under Event Settings.'
     },
     {
       id: 'item-song-1',
       type: 'song',
-      title: 'Pehla Nasha',
-      singer: 'Priya Sharma',
-      location: 'San Jose, CA',
-      lyricStyle: 1, // Classic Gold Glow
-      lyricSize: 54,
-      lyrics: [
-        'Pehla nasha, pehla khumar',
-        'Naya pyaar hai, naya intezaar',
-        'Kar loon main kya apna haal',
-        'Aye dil-e-bekaraar, mere dil-e-bekaraar',
-        'Tu hi bata...'
-      ],
-      notes: 'Opening performance. Priya is singing live over backing track. Keep volume balanced on Zoom.'
+      title: 'Opening Bhajan',
+      singer: 'Singer name',
+      location: '',
+      lyricStyle: 4,
+      lyricSize: 52,
+      lyrics: ['Add bhajan lyrics here', 'One line per row'],
+      notes: 'Replace with the first bhajan, singer and lyrics.'
     },
     {
       id: 'item-buzz-1',
       type: 'buzz',
-      title: 'Instrumental Round 1: Guess the 90s Blockbuster Hook',
-      mysteryTitle: 'Tujhe Dekha Toh Yeh Jaana Sanam',
-      filmName: 'Dilwale Dulhania Le Jayenge (1995)',
-      originalSinger: 'Kumar Sanu & Lata Mangeshkar',
-      hints: 'Mando / Guitar intro melody, filmed in Swiss mustard fields.',
+      title: 'Instrumental Round: Guess the Bhajan',
+      mysteryTitle: '',
+      filmName: '',
+      originalSinger: '',
+      hints: '',
       pointsCorrect: 10,
       pointsPenalty: 5,
-      synthMelody: 'ddlj', // Built-in synthesizer melody ID
-      notes: 'Explain rules to Zoom guests: Open Buzzer link, listen to instrumental, tap BUZZ when recognized!'
+      synthMelody: 'bhakti',
+      notes: 'Open the online buzzer room and share the participant link in Zoom chat.'
     },
     {
-      id: 'item-quiz-1',
-      type: 'quiz',
-      title: 'Which legendary playback singer recorded the most duets with R.D. Burman?',
-      options: [
-        'Lata Mangeshkar',
-        'Asha Bhosle',
-        'Geeta Dutt',
-        'Kishore Kumar'
-      ],
-      answerIndex: 1, // Asha Bhosle
-      notes: 'Encourage audience in chat to vote before revealing the correct answer.'
-    },
-    {
-      id: 'item-audio-1',
-      type: 'audio',
-      title: 'Lag Jaa Gale (Acoustic Cover)',
-      singer: 'Rahul Verma',
-      location: 'Boston, MA',
-      notes: 'Rahul is performing on acoustic guitar. Full visualizer on screen.'
-    },
-    {
-      id: 'item-buzz-2',
-      type: 'buzz',
-      title: 'Instrumental Round 2: Fast Accordion Theme',
-      mysteryTitle: 'Yeh Chand Sa Roshan Chehra',
-      filmName: 'Kashmir Ki Kali (1964)',
-      originalSinger: 'Mohammed Rafi',
-      hints: 'Composed by O.P. Nayyar, energetic Shikara boat song.',
-      pointsCorrect: 10,
-      pointsPenalty: 5,
-      synthMelody: 'roshan',
-      notes: 'Second instrumental buzzer round. Zoom participants can steal if rank #1 answers incorrectly.'
-    },
-    {
-      id: 'item-game-1',
-      type: 'game',
-      title: 'Rapid Fire Antakshari Challenge',
-      rules: 'Teams take turns singing a song starting with the last letter of the previous song within 15 seconds.',
-      prizes: 'Amazon Gift Card + Winner Trophy Badge',
-      notes: 'Split Zoom participants into Team Retro (East Coast) vs Team Melody (West Coast).'
-    },
-    {
-      id: 'item-break-1',
-      type: 'break',
-      title: '5-Minute Intermission & Tea Break',
-      notes: 'Display countdown on stage and remind participants to grab refreshments.'
-    },
-    {
-      id: 'item-song-2',
-      type: 'song',
-      title: 'Chaiyya Chaiyya - Grand Finale',
-      singer: 'Amit Patel & Ensemble',
-      location: 'London, UK',
-      lyricStyle: 2, // Neon Bright Cyan
-      lyricSize: 56,
-      lyrics: [
-        'Jinke sar ho ishq ki chhaanv',
-        'Paaon ke neeche jannat hogi',
-        'Chal chhaiyya chhaiyya chhaiyya chhaiyya',
-        'Saare ishq ki chhaanv chal chhaiyya chhaiyya'
-      ],
-      notes: 'Grand finale! Everyone unmutes on Zoom to clap along.'
+      id: 'item-closing-1',
+      type: 'slide',
+      title: 'Thank You',
+      singer: '',
+      location: '',
+      slideCaption: '',
+      notes: 'Closing remarks and vote of thanks.'
     }
   ],
   scriptText: '',
-  participantScores: {
-    'Rahul (Boston)': 15,
-    'Priya (San Jose)': 20,
-    'Amit (London)': 10,
-    'Neha (Chicago)': 5,
-    'Vikram (Seattle)': 10
-  }
+  participantScores: {}
 };
 
 // Current Application State
@@ -366,8 +302,8 @@ function playSynthesizedInstrumental(melodyId) {
   };
 
   let sequence = [];
-  if (melodyId === 'ddlj') {
-    // Mandolin intro melody sequence (notes + duration in sec)
+  if (melodyId === 'ddlj' || melodyId === 'bhakti') {
+    // Gentle test phrase (replace with your own instrumental audio file)
     sequence = [
       { note: notes.G4, dur: 0.35 }, { note: notes.C5, dur: 0.35 }, { note: notes.D5, dur: 0.35 },
       { note: notes.E5, dur: 0.7 },  { note: notes.D5, dur: 0.35 }, { note: notes.C5, dur: 0.35 },
@@ -377,7 +313,7 @@ function playSynthesizedInstrumental(melodyId) {
       { note: notes.C5, dur: 1.0 }
     ];
   } else {
-    // Kashmir Ki Kali energetic accordion hook
+    // Alternate test phrase
     sequence = [
       { note: notes.E5, dur: 0.25 }, { note: notes.E5, dur: 0.25 }, { note: notes.D5, dur: 0.25 },
       { note: notes.C5, dur: 0.25 }, { note: notes.B4, dur: 0.25 }, { note: notes.A4, dur: 0.4 },
@@ -527,11 +463,17 @@ async function deleteMediaBlob(itemId) {
 // -----------------------------------------------------------------------------
 function loadSavedData() {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    let raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) {
+      // Keep the user's own older show, but drop the old Bollywood sample show
+      const legacy = localStorage.getItem(LEGACY_STORAGE_KEY);
+      if (legacy && !/Melody Junction/i.test(legacy)) raw = legacy;
+    }
     if (raw) {
       const parsed = JSON.parse(raw);
       if (parsed && Array.isArray(parsed.items)) {
-        appData = { ...defaultShowData, ...parsed };
+        appData = { ...JSON.parse(JSON.stringify(defaultShowData)), ...parsed };
+        appData.eventInfo = { ...defaultShowData.eventInfo, ...(parsed.eventInfo || {}) };
       }
     }
   } catch (e) {
@@ -580,6 +522,11 @@ if (appChannel) {
 }
 
 window.addEventListener('storage', e => {
+  if (e.key === STORAGE_KEY && document.body.classList.contains('audience-window')) {
+    loadSavedData();
+    renderStageContent();
+    return;
+  }
   if (e.key === 'show_studio_sync_event' && e.newValue) {
     try {
       const msg = JSON.parse(e.newValue);
@@ -620,6 +567,7 @@ function switchView(viewName) {
 
   if (targetView) targetView.classList.add('active');
   if (targetBtn) targetBtn.classList.add('active');
+  document.body.dataset.view = viewName;
 
   // Specific view actions
   if (viewName === 'presentation') {
@@ -871,7 +819,7 @@ async function handleSaveItem() {
     newItem.hints = document.getElementById('buzzHintsInput').value.trim();
     newItem.pointsCorrect = 10;
     newItem.pointsPenalty = 5;
-    newItem.synthMelody = prevItem?.synthMelody || 'ddlj';
+    newItem.synthMelody = prevItem?.synthMelody || 'bhakti';
   } else if (type === 'slide') {
     newItem.slideCaption = document.getElementById('slideCaptionInput').value.trim();
   } else if (type === 'game') {
@@ -947,7 +895,7 @@ async function renderStageContent() {
   if (!item) {
     stage.innerHTML = `
       <div class="stage-content">
-        <h2 style="font-size: 2.2rem; color: #ffd700; margin-bottom: 10px;">🎤 Show Studio Pro</h2>
+        <h2 style="font-size: 2.2rem; color: #ffd700; margin-bottom: 10px;">DMHT Bhakti Studio</h2>
         <p style="font-size: 1.1rem; color: #cbd5e0;">Select a song, quiz, or buzzer round from your playlist to begin.</p>
       </div>
     `;
@@ -1051,12 +999,15 @@ function renderQuizStage(stage, item) {
 async function renderSlideStage(stage, item) {
   const mediaBlob = await getMediaBlob(item.id);
   const mediaUrl = mediaBlob ? URL.createObjectURL(mediaBlob) : null;
+  const info = appData.eventInfo || {};
+  const slideTitle = item.useProjectorTitle ? (info.projectorTitle || item.title) : item.title;
+  const slideSub = item.useProjectorTitle ? (info.projectorSubtitle || '') : (item.slideCaption || '');
 
   stage.innerHTML = `
     <div class="stage-content">
       ${mediaUrl ? `<img class="stage-slide-img" src="${mediaUrl}" alt="Slide image">` : ''}
-      <div class="stage-slide-caption">${escapeHtml(item.title)}</div>
-      ${item.slideCaption ? `<p style="font-size: 1.2rem; color: #e2e8f0; margin-top: 10px;">${escapeHtml(item.slideCaption)}</p>` : ''}
+      <div class="stage-slide-caption">${escapeHtml(slideTitle)}</div>
+      ${slideSub ? `<p class="stage-slide-sub">${escapeHtml(slideSub)}</p>` : ''}
     </div>
   `;
 }
@@ -1415,11 +1366,11 @@ function simulateZoomParticipantsBuzzing() {
   }
 
   const simulatedGuests = [
-    { name: 'Priya Sharma', city: 'San Jose, CA' },
-    { name: 'Rahul Verma', city: 'Boston, MA' },
-    { name: 'Amit Patel', city: 'London, UK' },
-    { name: 'Neha Gupta', city: 'Chicago, IL' },
-    { name: 'Vikram Seth', city: 'Seattle, WA' }
+    { name: 'Guest 1', city: 'Demo' },
+    { name: 'Guest 2', city: 'Demo' },
+    { name: 'Guest 3', city: 'Demo' },
+    { name: 'Guest 4', city: 'Demo' },
+    { name: 'Guest 5', city: 'Demo' }
   ];
 
   // Randomize sequence and buzz times
@@ -1437,24 +1388,9 @@ function simulateZoomParticipantsBuzzing() {
 
 // Copy Zoom Chat Announcement
 function copyZoomChatAnnouncement() {
-  const currentItem = appData.items[currentStageIndex];
-  const url = window.location.href.split('?')[0] + '?view=buzzer';
-  const text = `🎤 [MELODY JUNCTION - INSTRUMENTAL BUZZ ROUND]
-Round: ${currentItem ? currentItem.title : 'Guess the Tune'}
-📱 Zoom Attendees, open your buzzer here to participate:
-${url}
-
-Rules:
-1. Listen closely to the instrumental melody
-2. Tap BUZZ as soon as you recognize the song
-3. Fast rankings appear on screen, and Rank #1 unmutes to answer!
-Good luck! 🏆`;
-
-  navigator.clipboard.writeText(text).then(() => {
-    alert('Zoom Chat message copied to clipboard! Paste it into Zoom Chat now.');
-  }).catch(() => {
-    prompt('Copy this Zoom Chat message:', text);
-  });
+  // Remote participants need a room link from the online buzzer
+  const w = window.open('/buzzer/', 'DMHTOnlineBuzzer');
+  if (!w) location.href = '/buzzer/';
 }
 
 // -----------------------------------------------------------------------------
@@ -1563,83 +1499,60 @@ function renderLeaderboardScores() {
 // -----------------------------------------------------------------------------
 function generateAnchorScript() {
   const info = appData.eventInfo || {};
+  const eventName = info.eventName || 'our Bhakti program';
+  const line = '-------------------------------------------------------------------------\n';
   let script = '';
 
-  script += `=========================================================================\n`;
-  script += `🎤 OFFICIAL ANCHOR SCRIPT: ${info.eventName || 'Live Musical Evening'}\n`;
-  script += `Theme: ${info.eventTheme || 'Music Celebration'}\n`;
-  script += `=========================================================================\n\n`;
+  script += `ANCHOR SCRIPT: ${eventName}\n`;
+  if (info.eventTheme) script += `Program: ${info.eventTheme}\n`;
+  script += `\n[OPENING]\n`;
+  if (info.customGreeting) script += `"${info.customGreeting}"\n\n`;
+  script += `Anchor: "A very warm welcome to everyone joining us here and on Zoom. Thank you for being part of ${eventName}.`;
+  if (info.themeDescription) script += ` ${info.themeDescription}`;
+  script += ` Let us begin."\n\n`;
 
-  // Opening
-  script += `[EVENT OPENING & WELCOME]\n`;
-  if (info.customGreeting) {
-    script += `"${info.customGreeting}"\n\n`;
-  }
-  script += `Good evening, ladies and gentlemen, music lovers, and our wonderful family joining us live on Zoom and in the auditorium! Welcome to ${info.eventName || 'our musical showcase'}.\n`;
-  if (info.themeDescription) {
-    script += `Tonight's theme is ${info.eventTheme}: ${info.themeDescription}\n`;
-  }
-  script += `We have a spectacular lineup of singers, interactive trivia quizzes, and thrilling instrumental buzzer rounds. Keep your fingers ready on your buzzers!\n\n`;
-
-  // Sequence items
   appData.items.forEach((item, idx) => {
-    script += `-------------------------------------------------------------------------\n`;
-    script += `SEGMENT ${idx + 1}: ${item.title.toUpperCase()} [${getItemTypeLabel(item.type)}]\n`;
-    script += `-------------------------------------------------------------------------\n`;
+    const title = item.useProjectorTitle ? (info.projectorTitle || item.title) : item.title;
+    script += line + `SEGMENT ${idx + 1}: ${title} [${getItemTypeLabel(item.type)}]\n` + line;
 
     switch (item.type) {
       case 'song':
-        script += `Anchor: "And now, bringing us our next live musical performance, please give a huge round of applause for ${item.singer || 'our talented singer'}${item.location ? ' joining us all the way from ' + item.location : ''}! Tonight, presenting the timeless melody — '${item.title}'! Over to you, ${item.singer}!"\n`;
-        if (item.notes) script += `[HOST NOTE: ${item.notes}]\n`;
-        break;
-
       case 'audio':
-        script += `Anchor: "What a soulful track we have lined up next. Let's tune our ears to '${item.title}', performed with heartfelt passion by ${item.singer || 'our artist'}${item.location ? ' from ' + item.location : ''}."\n`;
+        script += `Anchor: "Next, please welcome ${item.singer || 'our singer'}${item.location ? ' from ' + item.location : ''}, who will present '${item.title}'."\n`;
         break;
-
       case 'quiz':
-        script += `Anchor: "Audience time! Let's test your music knowledge with our trivia question: '${item.title}'"\n`;
-        if (item.options) {
-          item.options.forEach((opt, oIdx) => {
-            script += `  ${String.fromCharCode(65 + oIdx)}. ${opt}\n`;
-          });
-          const correctOpt = item.options[item.answerIndex] || '';
-          script += `[CONFIDENTIAL ANSWER KEY: (${String.fromCharCode(65 + item.answerIndex)}) ${correctOpt}]\n`;
+        script += `Anchor: "Here is our next question: '${item.title}'"\n`;
+        (item.options || []).forEach((opt, oIdx) => {
+          script += `  ${String.fromCharCode(65 + oIdx)}. ${opt}\n`;
+        });
+        if (item.options && item.options[item.answerIndex] !== undefined) {
+          script += `[ANSWER - HOST ONLY: ${String.fromCharCode(65 + item.answerIndex)}. ${item.options[item.answerIndex]}]\n`;
         }
-        script += `Anchor: "Cast your votes in the chat, and let's reveal the winner!"\n`;
         break;
-
       case 'buzz':
-        script += `Anchor: "🚨 ROUND ALERT! It's time for our INSTRUMENTAL BUZZ ROUND: '${item.title}'!\n`;
-        script += `Anchor: 'Zoom guests, open your buzzer link in chat! In a moment, our mystery instrumental track will play. As soon as you recognize the song, hit your BUZZER! Rank #1 gets the first chance to unmute and guess!'\n`;
-        script += `[CONFIDENTIAL ANSWER: '${item.mysteryTitle || 'Mystery'}' from '${item.filmName || 'Film'}' - Original by ${item.originalSinger || 'Artist'}]\n`;
-        if (item.hints) script += `[HINTS TO DROP IF AUDIENCE IS STUCK: ${item.hints}]\n`;
+        script += `Anchor: "Our next segment is '${item.title}'. Zoom participants, please open the buzzer link in the chat and enter your name. When the instrumental begins, press Buzz as soon as you recognize it. The first person to buzz will answer first."\n`;
+        if (item.mysteryTitle) {
+          script += `[ANSWER - HOST ONLY: ${item.mysteryTitle}${item.filmName ? ' | ' + item.filmName : ''}${item.originalSinger ? ' | ' + item.originalSinger : ''}]\n`;
+        }
+        if (item.hints) script += `[HINT: ${item.hints}]\n`;
         break;
-
       case 'game':
-        script += `Anchor: "Time to energize the room with our interactive game: '${item.title}'!\n`;
-        if (item.rules) script += `Here are the rules: ${item.rules}\n`;
-        if (item.prizes) script += `Exciting prizes up for grabs: ${item.prizes}!\n`;
+        script += `Anchor: "Our next segment is '${item.title}'."\n`;
+        if (item.rules) script += `Anchor: "${item.rules}"\n`;
+        if (item.prizes) script += `Anchor: "${item.prizes}"\n`;
         break;
-
       case 'break':
-        script += `Anchor: "We are taking a quick break. Stretch your legs, grab your favorite warm drink, and we will be right back in 5 minutes with more amazing performances!"\n`;
+        script += `Anchor: "We will take a short break now. Please stay with us; we will continue in a few minutes."\n`;
         break;
-
-      case 'slide':
       default:
-        script += `Anchor: "Moving forward in our show: ${item.title}."\n`;
-        break;
+        script += `Anchor: "${title}${item.slideCaption ? ' - ' + item.slideCaption : ''}."\n`;
     }
-
+    if (item.notes) script += `[HOST NOTE: ${item.notes}]\n`;
     script += `\n`;
   });
 
-  // Closing
-  script += `=========================================================================\n`;
-  script += `[GRAND CLOSING & VOTE OF THANKS]\n`;
-  script += `Anchor: "What an unforgettable evening of music, talent, and laughter! A heartfelt thank you to all our brilliant singers, our energetic Zoom participants for buzzing in, and every single one of you in the audience. Until we meet again, keep singing, keep smiling, and have a wonderful night!"\n`;
-  script += `=========================================================================\n`;
+  script += line + `[CLOSING]\n`;
+  script += `Anchor: "Thank you to all our singers, musicians, volunteers, and everyone who joined us in person and on Zoom. Thank you for being part of ${eventName}."\n`;
 
   appData.scriptText = script;
   const area = document.getElementById('scriptOutputArea');
@@ -1888,11 +1801,13 @@ function populateEventDetailsForm() {
   document.getElementById('eventThemeInput').value = info.eventTheme || '';
   document.getElementById('themeDescInput').value = info.themeDescription || '';
   document.getElementById('customGreetingInput').value = info.customGreeting || '';
+  document.getElementById('projectorTitleInput').value = info.projectorTitle || '';
+  document.getElementById('projectorSubtitleInput').value = info.projectorSubtitle || '';
 }
 
 function bindEventListeners() {
   // Event Details Live Updates
-  ['eventNameInput', 'eventThemeInput', 'themeDescInput', 'customGreetingInput'].forEach(id => {
+  ['eventNameInput', 'eventThemeInput', 'themeDescInput', 'customGreetingInput', 'projectorTitleInput', 'projectorSubtitleInput'].forEach(id => {
     const el = document.getElementById(id);
     if (el) {
       el.addEventListener('input', () => {
@@ -1900,7 +1815,10 @@ function bindEventListeners() {
         appData.eventInfo.eventTheme = document.getElementById('eventThemeInput').value;
         appData.eventInfo.themeDescription = document.getElementById('themeDescInput').value;
         appData.eventInfo.customGreeting = document.getElementById('customGreetingInput').value;
+        appData.eventInfo.projectorTitle = document.getElementById('projectorTitleInput').value;
+        appData.eventInfo.projectorSubtitle = document.getElementById('projectorSubtitleInput').value;
         saveShowData();
+        renderStageContent();
       });
     }
   });
