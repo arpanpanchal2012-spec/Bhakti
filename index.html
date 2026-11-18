@@ -12,9 +12,10 @@
   <!-- Top Sticky Header -->
   <header class="app-header">
     <div class="brand">
+      <svg class="brand-mark" viewBox="0 0 40 40" aria-hidden="true"><defs><linearGradient id="gmark" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#d0824f"/><stop offset="1" stop-color="#8f4c26"/></linearGradient></defs><path d="M20 3 34 14 20 37 6 14Z" fill="url(#gmark)"/><path d="M6 14h28L20 3Z" fill="#e8a06b" opacity=".85"/><path d="M20 37 13 14h14Z" fill="#5e3117" opacity=".55"/></svg>
       <div class="brand-title">
         <h1>DMHT Bhakti Studio</h1>
-        <p>Program • Projector • Anchor Script • Buzzer</p>
+        <p>Live Show Control</p>
       </div>
     </div>
 
@@ -46,6 +47,7 @@
       <button class="quick-btn" onclick="exportShowPackage()" title="Export complete show data as JSON">
         Export
       </button>
+      <div class="host-chip"><div class="avatar">H</div><div><b>Host</b><small>Presenter desk</small></div></div>
       <button class="quick-btn" onclick="triggerImportFile()" title="Import an existing show JSON">
         Import
       </button>
@@ -367,88 +369,112 @@
          VIEW 2: LIVE STAGE & PRESENTER CONSOLE
          ==================================================================== -->
     <section class="view-section" id="presentationView">
-      <div class="presentation-wrap">
+      <div class="studio-grid">
 
-        <div class="host-dashboard" id="hostDashboard"><div><small>CURRENT SEGMENT</small><strong id="currentSegmentName">—</strong><span id="currentLyricCue"></span></div><div><small>UP NEXT</small><strong id="nextSegmentName">—</strong><span id="nextLyricCue"></span></div><div><small>ANCHOR NOTES · PRIVATE</small><span id="anchorCurrentCue">—</span></div></div>
-        <!-- Stage Viewport (Mirrored in Audience Window) -->
-        <div class="presentation-stage" id="presentationStage">
-          <!-- Rendered dynamically via renderStageContent() -->
-        </div>
+        <!-- Column 1: projector preview, transport, lyric navigation -->
+        <div class="studio-main">
+          <div class="card preview-card">
+            <div class="card-head">
+              <span class="card-label">Projector Preview</span>
+              <span class="pill">Audience view</span>
+            </div>
+            <div class="presentation-stage" id="presentationStage">
+              <!-- Rendered dynamically via renderStageContent() -->
+            </div>
 
-        <!-- Presenter Control Desk (Hidden from clean audience projector screen) -->
-        <div class="presenter-controls">
-          <div class="control-btn-group">
-            <button class="ctrl-btn" onclick="prevStageItem()" title="Shortcut: PgUp / P">⏮️ Prev Item</button>
-            <button class="ctrl-btn" onclick="nextStageItem()" title="Shortcut: PgDown / N">Next Item ⏭️</button>
-            <button class="ctrl-btn" onclick="prevLyricLine()" title="Shortcut: Left Arrow">◀️ Prev Lyric</button>
-            <button class="ctrl-btn" onclick="nextLyricLine()" title="Shortcut: Right Arrow / Space">Next Lyric / Reveal ▶️</button>
-            <button class="ctrl-btn" onclick="toggleQuizAnswer()" title="Shortcut: R">💡 Reveal Answer</button>
-            <button class="ctrl-btn btn-danger-ctrl" onclick="toggleBlackout()" title="Shortcut: B">⬛ Blackout</button>
+            <div class="transport-bar">
+              <div class="transport-id">
+                <div class="avatar">DS</div>
+                <div class="transport-meta">
+                  <strong id="transportTitle">No segment selected</strong>
+                  <span id="transportSub">Choose a segment from Program</span>
+                </div>
+              </div>
+              <div class="transport-controls">
+                <button class="t-btn" onclick="prevStageItem()" title="Previous item (PgUp)">&#9198;</button>
+                <button class="t-btn t-main" id="transportPlay" onclick="hostPlayPause()" title="Play / pause attached media">&#9654;</button>
+                <button class="t-btn" onclick="nextStageItem()" title="Next item (PgDn)">&#9197;</button>
+                <input type="range" id="transportSeek" min="0" max="1000" value="0" aria-label="Seek position">
+                <span class="t-time" id="transportTime">0:00 / 0:00</span>
+                <button class="t-btn" onclick="hostRestart()" title="Restart media">&#8634;</button>
+                <input type="range" id="transportVolume" min="0" max="1" step="0.05" value="1" aria-label="Volume">
+              </div>
+            </div>
+
+            <div class="lyric-nav-row">
+              <button class="btn btn-secondary" onclick="prevLyricLine()" title="Left arrow">&#8249; Previous lyric</button>
+              <button class="btn btn-secondary" onclick="nextLyricLine()" title="Right arrow / Space">Next lyric / reveal &#8250;</button>
+              <button class="btn btn-secondary" onclick="toggleQuizAnswer()" title="R">Reveal answer</button>
+              <button class="btn btn-ghost-danger" onclick="toggleBlackout()" title="B">Blackout</button>
+            </div>
           </div>
 
-          <div class="host-online card" style="margin:14px 0;padding:16px;color:#242334">
-            <h3>Live participant buzzer · optional for any segment</h3>
-            <p>Create one room, share the participant link in Zoom, and control every round here.</p>
-            <div class="control-btn-group"><button class="ctrl-btn" onclick="createOnlineRoom()">Create room</button><button class="ctrl-btn" onclick="copyOnlineLink()">Copy participant link</button><button class="ctrl-btn" onclick="toggleOnlineProjection()">Show / hide participants on projector</button></div>
-            <p id="onlineRoomInfo">No online room created.</p><p id="onlineStatus" role="status"></p>
-            <div id="onlineHostRanking"></div>
-            <p style="font-size:.8rem">Rank is server receipt order; network and Zoom audio delays can affect fairness.</p>
-          </div>
-          <div class="host-media card" style="margin:14px 0;padding:16px;color:#242334"><h3>Attached media</h3><label><input id="mediaLoop" type="checkbox" style="width:auto"> Loop media</label><p id="hostMediaLabel">Select a segment with an attached audio or video file.</p><div id="hostMediaSlot"></div></div>
-          <!-- Buzzer Specific Controls -->
-          <div class="control-btn-group">
-            <button class="ctrl-btn btn-success-ctrl" onclick="openBuzzersForRound()">🚨 Open Buzzers</button>
-            <button class="ctrl-btn" onclick="lockBuzzersForRound()">🔒 Lock Buzzers</button>
-            <button class="ctrl-btn" onclick="resetBuzzersForRound()">🔄 Reset Buzz</button>
-            
-            
-            
-            
+          <div class="tri-cards">
+            <div class="card mini"><span class="card-label">Current</span><strong id="currentSegmentName">—</strong><span class="mini-sub" id="currentLyricCue"></span></div>
+            <div class="card mini"><span class="card-label">Up Next</span><strong id="nextSegmentName">—</strong><span class="mini-sub" id="nextLyricCue"></span></div>
+            <div class="card mini"><span class="card-label">Host Notes · Private</span><span class="mini-body" id="anchorCurrentCue">—</span></div>
           </div>
 
-          <p id="quizHostInstruction" style="color:#d4d9e4;font-size:.85rem"></p>
-          <div>
-            <span id="stageItemCounter" style="color: #a0aec0; font-size: 0.85rem; font-weight: bold;">Item 1 of 8</span>
-          </div>
-        </div>
-
-        <!-- Host Confidential Cue Box -->
-        <div class="host-cue-box" id="presenterCueBox">
-          <!-- Rendered dynamically -->
-        </div>
-      </div>
-    </section>
-
-    <!-- ====================================================================
-         VIEW 3: ANCHOR SCRIPT GENERATOR PRO & TELEPROMPTER
-         ==================================================================== -->
-    <section class="view-section" id="anchorScriptView">
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title">
-            <span>📜</span> Anchor Script Generator Pro
-          </div>
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-            <button class="btn btn-primary btn-sm" onclick="if(!appData.scriptText || confirm('Replace the current anchor script?')) generateAnchorScript()">
-              🔄 Re-Generate Script
-            </button>
-            <button class="btn btn-success btn-sm" onclick="openTeleprompter()">
-              📺 Open Teleprompter
-            </button>
-            <button class="btn btn-secondary btn-sm" onclick="downloadScriptTxt()">
-              💾 Download TXT
-            </button>
-            <button class="btn btn-secondary btn-sm" onclick="printAnchorScript()">
-              🖨️ Print / Save PDF
-            </button>
+          <div class="card media-card">
+            <div class="card-head">
+              <span class="card-label">Attached Media</span>
+              <label class="check"><input id="mediaLoop" type="checkbox"> Loop media</label>
+            </div>
+            <p class="mini-sub" id="hostMediaLabel">Select a segment with an attached audio or video file.</p>
+            <div id="hostMediaSlot"></div>
+            <p class="mini-sub" id="quizHostInstruction"></p>
+            <span class="mini-sub" id="stageItemCounter">Item 1 of 1</span>
           </div>
         </div>
 
-        <p style="font-size: 0.88rem; color: #718096; margin-bottom: 12px;">
-          Generated from your event settings and program. Edit it freely below.
-        </p>
+        <!-- Column 2: live buzzer, host dashboard, anchor cue -->
+        <div class="studio-side">
+          <div class="card">
+            <div class="card-head">
+              <span class="card-label">Live Buzzer</span>
+              <span class="status"><i class="dot" id="buzzerStatusDot"></i><span id="buzzerStatusText">No room</span></span>
+            </div>
+            <div class="buzz-box">
+              <div class="buzz-icon">&#128718;</div>
+              <div><strong>Buzzer</strong><span class="mini-sub" id="onlineStatus">Create a room to start.</span></div>
+            </div>
+            <div class="stack-btns">
+              <button class="btn btn-primary" onclick="openBuzzersForRound()">Open Buzzer</button>
+              <button class="btn btn-secondary" onclick="lockBuzzersForRound()">Lock Buzzer</button>
+              <button class="btn btn-secondary" onclick="resetBuzzersForRound()">Reset Round</button>
+              <button class="btn btn-secondary" onclick="createOnlineRoom()">Create Room</button>
+              <button class="btn btn-secondary" onclick="copyOnlineLink()">Copy Participant Link</button>
+              <button class="btn btn-secondary" onclick="toggleOnlineProjection()">Show / Hide on Projector</button>
+            </div>
+            <p class="mini-sub" id="onlineRoomInfo" style="margin-top:10px">No online room created.</p>
+          </div>
 
-        <textarea class="script-output-area" id="scriptOutputArea" placeholder="Click 'Re-Generate Script' to build your script..."></textarea>
+          <div class="card">
+            <div class="card-head"><span class="card-label">Host Dashboard</span><span class="card-emoji">&#127942;</span></div>
+            <div class="dash-rows">
+              <div class="dash-row"><span>Program</span><strong id="dashEventName">—</strong></div>
+              <div class="dash-row"><span>Segment type</span><strong id="dashSegmentType">—</strong></div>
+              <div class="dash-row"><span>Position</span><strong id="dashPosition">—</strong></div>
+            </div>
+          </div>
+
+          <div class="card cue-card">
+            <div class="card-head"><span class="card-label">Anchor Cue</span></div>
+            <div id="presenterCueBox"></div>
+          </div>
+        </div>
+
+        <!-- Column 3: participant rail -->
+        <div class="studio-rail">
+          <div class="card rail-card">
+            <div class="card-head">
+              <span class="card-label">Participants</span>
+              <span class="pill" id="participantCount">0 in room</span>
+            </div>
+            <div id="onlineHostRanking"><p class="mini-sub">No participants yet. Create a room and share the link in Zoom.</p></div>
+          </div>
+        </div>
+
       </div>
     </section>
 
@@ -559,6 +585,16 @@
       <!-- Script content injected here -->
     </div>
   </div>
+
+  <!-- Status footer -->
+  <footer class="studio-footer">
+    <span class="f-brand">DMHT Bhakti Studio</span>
+    <span class="f-tag">Devotion · Music · Connection</span>
+    <span class="footer-status">
+      <span class="status"><i class="dot" id="footerDot"></i><span id="footerStatusText">Studio ready</span></span>
+      <span id="studioClock">--:--</span>
+    </span>
+  </footer>
 
   <!-- JavaScript Engine -->
   <script src="/studio/app.js?v=trivia-2"></script>
