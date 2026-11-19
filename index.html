@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DMHT Bhakti Studio</title>
   <link rel="stylesheet" href="/studio/styles.css">
-  <link rel="stylesheet" href="/studio/theme.css">
+  <link rel="stylesheet" href="/studio/theme.css?v=emoji-1">
 </head>
 <body>
 
@@ -138,7 +138,7 @@
               </span>
             </div>
 
-            <div class="form-group"><label for="segmentTemplate">Start from a template (optional)</label><select id="segmentTemplate"><option value="">Choose template</option><option value="blank">Blank text</option><option value="song">Bhajan performance</option><option value="slide">Welcome slide</option><option value="quiz">Trivia question</option><option value="break">Intermission</option><option value="announcement">Announcement</option></select></div>
+            <div class="form-group"><label for="segmentTemplate">Start from a template (optional)</label><select id="segmentTemplate"><option value="">Choose template</option><option value="blank">Blank text</option><option value="song">Bhajan performance</option><option value="slide">Welcome slide</option><option value="quiz">Trivia question</option><option value="emoji">Emoji question</option><option value="break">Intermission</option><option value="announcement">Announcement</option></select></div>
             <div class="form-group">
               <label for="itemTypeSelect">Segment Type:</label>
               <select id="itemTypeSelect">
@@ -251,6 +251,7 @@
 
             <!-- Quiz Fields Group -->
             <div id="formQuizGroup" class="hide">
+              <div class="form-group"><label for="quizEmoji">Emoji clue (optional)</label><textarea id="quizEmoji" rows="2" placeholder="Paste emojis here, for example: 🌙 🌊 🎵"></textarea><span class="hint">For an Emoji Question, enter the instruction in the Segment Title field above. Emojis appear large below it.</span></div>
               <div class="form-group">
                 <label for="quizOptionsInput">Answer Options <span class="hint">(optional; enter 2–4, one per line)</span>:</label>
                 <textarea id="quizOptionsInput" placeholder="Option A&#10;Option B&#10;Option C&#10;Option D"></textarea>
@@ -601,9 +602,9 @@
   </footer>
 
   <!-- JavaScript Engine -->
-  <script src="/studio/app.js?v=trivia-2"></script>
+  <script src="/studio/app.js?v=emoji-1"></script>
   <script src="/studio/integration.js?v=studio-3"></script>
-  <script src="/studio/enhancements.js?v=studio-3"></script>
+  <script src="/studio/enhancements.js?v=emoji-1"></script>
   <script src="/studio/folder-and-quiz.js?v=1"></script>
 </body>
 </html>

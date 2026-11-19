@@ -695,6 +695,7 @@ function editSequenceItem(index) {
     document.getElementById('quizOptionsInput').value = (item.options || []).join('\n');
     document.getElementById('quizAnswerSelect').value = item.answerIndex !== undefined ? item.answerIndex : 0;
     document.getElementById('quizAnswerText').value=item.answerText||'';
+    document.getElementById('quizEmoji').value=item.quizEmoji||'';
     document.getElementById('answerImageName').textContent=item.answerImageName||'';
     document.getElementById('answerAudioName').textContent=item.answerAudioName||'';
   } else if (item.type === 'buzz') {
@@ -763,6 +764,7 @@ function resetItemForm() {
   document.getElementById('itemLyricSizeDisplay').textContent=document.getElementById('itemLyricSizeInput').value+'px';
   document.getElementById('quizOptionsInput').value = '';
   document.getElementById('quizAnswerText').value='';
+  document.getElementById('quizEmoji').value='';
   document.getElementById('quizAnswerImage').value='';document.getElementById('quizAnswerAudio').value='';
   document.getElementById('removeAnswerImage').checked=false;document.getElementById('removeAnswerAudio').checked=false;
   document.getElementById('answerImageName').textContent='';document.getElementById('answerAudioName').textContent='';
@@ -837,6 +839,7 @@ async function handleSaveItem() {
       .filter(Boolean);
     newItem.answerIndex = parseInt(document.getElementById('quizAnswerSelect').value, 10) || 0;
     newItem.answerText=document.getElementById('quizAnswerText').value.trim();
+    newItem.quizEmoji=document.getElementById('quizEmoji').value.trim();
     for (const [kind,input] of [['Image','quizAnswerImage'],['Audio','quizAnswerAudio']]) {
       const key=itemId+'-answer-'+kind.toLowerCase();const file=document.getElementById(input).files[0];
       newItem['answer'+kind+'Name']=prevItem?.['answer'+kind+'Name']||'';
@@ -1017,8 +1020,9 @@ function renderQuizStage(stage, item) {
 
   stage.innerHTML = `
     <div class="stage-content">
-      <div style="font-size: 1.1rem; color: #38bdf8; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px;">Trivia Quiz</div>
+      ${item.quizEmoji ? '' : `<div style="font-size: 1.1rem; color: #38bdf8; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px;">Trivia Quiz</div>`}
       <div class="stage-quiz-question">${escapeHtml(item.title)}</div>
+      ${item.quizEmoji ? `<div class="quiz-emoji-clue">${escapeHtml(item.quizEmoji)}</div>` : ''}
       <div class="stage-quiz-options">
         ${optionsHtml}
       </div>
@@ -1556,6 +1560,8 @@ function generateAnchorScript() {
         break;
       case 'quiz':
         script += `Anchor: "Here is our next question: '${item.title}'"\n`;
+        if(item.quizEmoji) script += `[EMOJI CLUE: ${item.quizEmoji}]\n`;
+        if(item.answerText) script += `[ANSWER - HOST ONLY: ${item.answerText}]\n`;
         (item.options || []).forEach((opt, oIdx) => {
           script += `  ${String.fromCharCode(65 + oIdx)}. ${opt}\n`;
         });

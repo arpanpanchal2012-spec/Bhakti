@@ -44,3 +44,7 @@ Choose **Blank text** in Segment Type (or the template) and write your text in t
 Quiz options are optional. Enter correct answer text and/or attach a correct answer image and/or audio. They remain hidden until the host reveals the answer. After reveal, the host can play the answer audio from the player in the Attached media section; share computer audio in Zoom. Question images and answer images are separate files. The show-folder format and the JSON media backup include answer media.
 
 Projector connection status is based on same-browser heartbeat, not a guarantee that a TV or Zoom is displaying the right window. The optional countdown is host-controlled and shared to the projector. Use the existing show preflight to check files and answers, but also manually rehearse playback and Zoom audio. The app does not yet have a dedicated isolated rehearsal mode, timed lyrics, automatic duration estimation, or automatic moved-file searching.
+
+## Emoji questions
+
+In Program, choose **Emoji question** under templates. Put the instruction (for example, “Identify the Pad from the emojis”) in Segment Title, and paste the emoji clue into **Emoji clue**. Enter the answer in **Correct answer text**; you may also attach an answer image or audio. Options are not required. Present the question, and click **Reveal Answer** when ready. The clue appears large on the projector. The answer audio, if any, is played manually from the host screen after revealing it.
