@@ -1019,8 +1019,7 @@ function renderQuizStage(stage, item) {
   });
 
   stage.innerHTML = `
-    <div class="stage-content">
-      ${item.quizEmoji ? '' : `<div style="font-size: 1.1rem; color: #38bdf8; font-weight: 700; margin-bottom: 12px; letter-spacing: 1px;">Trivia Quiz</div>`}
+    <div class="stage-content quiz-layout">
       <div class="stage-quiz-question">${escapeHtml(item.title)}</div>
       ${item.quizEmoji ? `<div class="quiz-emoji-clue">${escapeHtml(item.quizEmoji)}</div>` : ''}
       <div class="stage-quiz-options">
@@ -1089,7 +1088,6 @@ function renderGeneralStage(stage, item) {
   if(item.type==='blank'||item.type==='custom'){stage.innerHTML='<div class="stage-content"><div class="blank-text">'+escapeHtml(item.title)+'</div></div>';return;}
   stage.innerHTML = `
     <div class="stage-content">
-      <div style="font-size: 1.1rem; color: #a78bfa; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">✨ ${getItemTypeLabel(item.type)}</div>
       <h2 style="font-size: 2.6rem; color: #ffd700; font-weight: 800; margin-bottom: 15px;">${escapeHtml(item.title)}</h2>
       ${item.rules ? `<div style="background: rgba(255,255,255,0.08); padding: 20px; border-radius: 12px; margin-top: 15px; font-size: 1.2rem; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">📋 <strong>Rules:</strong> ${escapeHtml(item.rules)}</div>` : ''}
       ${item.prizes ? `<div style="font-size: 1.2rem; color: #4ade80; margin-top: 12px; font-weight: bold;">🏆 Prizes: ${escapeHtml(item.prizes)}</div>` : ''}
@@ -1187,6 +1185,7 @@ function stepQuizReveal() {
     playTickSound();
   } else if (!quizAnswerRevealed) {
     quizAnswerRevealed = true;
+    if (typeof showLive !== 'undefined') { showLive = false; sendLive(); }
     playCorrectSound();
   }
 
@@ -1201,11 +1200,15 @@ function toggleQuizAnswer() {
   if (item.type === 'quiz') {
     quizAnswerRevealed = !quizAnswerRevealed;
     if (quizAnswerRevealed) {
+      if (typeof showLive !== 'undefined') { showLive = false; sendLive(); }
       quizRevealedOptions = (item.options || []).length;
       playCorrectSound();
     }
   } else if (item.type === 'buzz') {
-    toggleBuzzerReveal();
+    quizAnswerRevealed = !quizAnswerRevealed;
+    if (quizAnswerRevealed && typeof showLive !== 'undefined') { showLive = false; sendLive(); }
+    renderStageContent();
+    broadcastStageState();
     return;
   }
 
