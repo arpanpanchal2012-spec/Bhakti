@@ -30,3 +30,17 @@ Show data, scores and attached media remain in the host browser, not the server.
 ## Run locally
 
 Run `python buzzer/server.py` from this folder (or `python3`), then open `http://localhost:8080/`. Localhost cannot be accessed by remote Zoom participants; deploy online or use a properly configured public server.
+
+## Windows/Chrome: save and reopen a show folder
+
+On your deployed HTTPS site in desktop Chrome, use **Program → Save Show Folder** and select an empty, dedicated folder. The app writes `show.json` and copies media into a `media` subfolder, one file at a time. Keep the tab open until it says the save is complete. Each save creates new media copies; older copies remain in the folder, so check free disk space. Copy the entire show folder to an external drive as a separate backup.
+
+Use **Open Show Folder** and select that folder on this or another computer. **Open Recent Show** remembers the last folder on this browser; Chrome may request access again. Opening replaces the program currently in the browser. If a file is missing, restore it to the media folder first; the app currently reports missing filenames but does not automatically search for moved files. Large media must first be attached to the browser's local storage; browser quota can still prevent adding very large shows. Folder storage is not cloud storage. Test your largest files and restore before relying on this for a show.
+
+## Blank segments and quiz answers
+
+Choose **Blank text** in Segment Type (or the template) and write your text in the segment title field. Blank and Custom segments display only that text, with no type label on the projector.
+
+Quiz options are optional. Enter correct answer text and/or attach a correct answer image and/or audio. They remain hidden until the host reveals the answer. After reveal, the host can play the answer audio from the player in the Attached media section; share computer audio in Zoom. Question images and answer images are separate files. The show-folder format and the JSON media backup include answer media.
+
+Projector connection status is based on same-browser heartbeat, not a guarantee that a TV or Zoom is displaying the right window. The optional countdown is host-controlled and shared to the projector. Use the existing show preflight to check files and answers, but also manually rehearse playback and Zoom audio. The app does not yet have a dedicated isolated rehearsal mode, timed lyrics, automatic duration estimation, or automatic moved-file searching.

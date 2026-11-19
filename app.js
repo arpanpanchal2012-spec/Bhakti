@@ -639,6 +639,7 @@ function getItemTypeLabel(type) {
     song: 'Video Song',
     audio: 'Audio Track',
     quiz: 'Trivia Quiz',
+    blank: 'Blank text',
     slide: 'Slide Card',
     buzz: 'Buzzer Round',
     game: 'Party Game',
@@ -693,6 +694,9 @@ function editSequenceItem(index) {
   } else if (item.type === 'quiz') {
     document.getElementById('quizOptionsInput').value = (item.options || []).join('\n');
     document.getElementById('quizAnswerSelect').value = item.answerIndex !== undefined ? item.answerIndex : 0;
+    document.getElementById('quizAnswerText').value=item.answerText||'';
+    document.getElementById('answerImageName').textContent=item.answerImageName||'';
+    document.getElementById('answerAudioName').textContent=item.answerAudioName||'';
   } else if (item.type === 'buzz') {
     document.getElementById('buzzMysteryTitle').value = item.mysteryTitle || '';
     document.getElementById('buzzFilmName').value = item.filmName || '';
@@ -733,6 +737,8 @@ async function deleteSequenceItem(index) {
   const item = appData.items[index];
   if (item && item.id) {
     await deleteMediaBlob(item.id);
+    await deleteMediaBlob(item.id+'-answer-image');
+    await deleteMediaBlob(item.id+'-answer-audio');
   }
   appData.items.splice(index, 1);
   if (currentStageIndex >= appData.items.length) {
@@ -756,6 +762,10 @@ function resetItemForm() {
   document.getElementById('itemLyricSizeInput').value=appData.globalSettings?.defaultLyricSize||64;
   document.getElementById('itemLyricSizeDisplay').textContent=document.getElementById('itemLyricSizeInput').value+'px';
   document.getElementById('quizOptionsInput').value = '';
+  document.getElementById('quizAnswerText').value='';
+  document.getElementById('quizAnswerImage').value='';document.getElementById('quizAnswerAudio').value='';
+  document.getElementById('removeAnswerImage').checked=false;document.getElementById('removeAnswerAudio').checked=false;
+  document.getElementById('answerImageName').textContent='';document.getElementById('answerAudioName').textContent='';
   document.getElementById('buzzMysteryTitle').value = '';
   document.getElementById('buzzFilmName').value = '';
   document.getElementById('buzzOriginalSinger').value = '';
@@ -781,7 +791,7 @@ async function handleSaveItem() {
     return;
   }
 
-  if(type==='quiz'){const opts=document.getElementById('quizOptionsInput').value.split('\n').map(x=>x.trim()).filter(Boolean);const answer=Number(document.getElementById('quizAnswerSelect').value);if(opts.length<2 || opts.length>4 || answer>=opts.length){alert('Enter two to four options and select a valid correct answer.');return}}
+  if(type==='quiz'){const opts=document.getElementById('quizOptionsInput').value.split('\n').map(x=>x.trim()).filter(Boolean);const answer=Number(document.getElementById('quizAnswerSelect').value);if(opts.length===1 || opts.length>4 || (opts.length && answer>=opts.length)){alert('Use no options, or enter two to four options and select a valid correct answer.');return}}
   const prevItem = editingIndex !== null ? appData.items[editingIndex] : null;
   const itemId = prevItem ? prevItem.id : ('item-' + Date.now());
 
@@ -826,6 +836,13 @@ async function handleSaveItem() {
       .map(o => o.trim())
       .filter(Boolean);
     newItem.answerIndex = parseInt(document.getElementById('quizAnswerSelect').value, 10) || 0;
+    newItem.answerText=document.getElementById('quizAnswerText').value.trim();
+    for (const [kind,input] of [['Image','quizAnswerImage'],['Audio','quizAnswerAudio']]) {
+      const key=itemId+'-answer-'+kind.toLowerCase();const file=document.getElementById(input).files[0];
+      newItem['answer'+kind+'Name']=prevItem?.['answer'+kind+'Name']||'';
+      if(document.getElementById('removeAnswer'+kind).checked){await deleteMediaBlob(key);newItem['answer'+kind+'Name']=''}
+      if(file){try{if(!await saveMediaBlob(key,file))throw Error('Storage unavailable');newItem['answer'+kind+'Name']=file.name}catch(e){alert('Could not save answer '+kind.toLowerCase()+': '+e.message);return}}
+    }
   } else if (type === 'buzz') {
     newItem.mysteryTitle = document.getElementById('buzzMysteryTitle').value.trim();
     newItem.filmName = document.getElementById('buzzFilmName').value.trim();
@@ -1005,6 +1022,8 @@ function renderQuizStage(stage, item) {
       <div class="stage-quiz-options">
         ${optionsHtml}
       </div>
+      ${quizAnswerRevealed&&item.answerText ? `<div class="quiz-answer-text">${escapeHtml(item.answerText)}</div>` : ''}
+      <div id="quizAnswerImageDisplay"></div>
     </div>
   `;
 }
@@ -1063,6 +1082,7 @@ function renderBuzzerStage(stage, item) {
 
 // 6. General Segment (Break, Game, Announcement)
 function renderGeneralStage(stage, item) {
+  if(item.type==='blank'||item.type==='custom'){stage.innerHTML='<div class="stage-content"><div class="blank-text">'+escapeHtml(item.title)+'</div></div>';return;}
   stage.innerHTML = `
     <div class="stage-content">
       <div style="font-size: 1.1rem; color: #a78bfa; font-weight: 700; text-transform: uppercase; margin-bottom: 12px;">✨ ${getItemTypeLabel(item.type)}</div>
@@ -1089,7 +1109,7 @@ function updatePresenterCues(item) {
   if (item.type === 'quiz') {
     const correctLetter = String.fromCharCode(65 + item.answerIndex);
     const correctText = (item.options && item.options[item.answerIndex]) || '';
-    text += ` • <span style="color:#ffd700; font-weight:bold;">CONFIDENTIAL ANSWER: [${correctLetter}] ${escapeHtml(correctText)}</span>`;
+    if(correctText||item.answerText) text += ` • <span style="color:#ffd700; font-weight:bold;">CONFIDENTIAL ANSWER: ${correctText?'['+correctLetter+'] '+escapeHtml(correctText):''} ${escapeHtml(item.answerText||'')}</span>`;
   } else if (item.type === 'buzz') {
     text += ` • <span style="color:#ffd700; font-weight:bold;">MYSTERY SONG: ${escapeHtml(item.mysteryTitle)} (${escapeHtml(item.filmName)})</span>`;
     if (item.hints) text += ` • <em>Hints:</em> ${escapeHtml(item.hints)}`;
