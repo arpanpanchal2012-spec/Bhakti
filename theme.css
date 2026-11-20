@@ -300,3 +300,4 @@ body.audience-window .app-container{padding:0}
 .presentation-stage .quiz-layout .quiz-answer-text{margin:8px auto;font-size:clamp(1.05rem,2vw,2rem)}
 .presentation-stage .quiz-layout .stage-quiz-options{flex-shrink:0}
 body.audience-window .presentation-stage .quiz-layout{width:100%;max-width:1100px}
+body.audience-window #remoteAnchorControls{display:none!important}

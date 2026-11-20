@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>DMHT Bhakti Studio</title>
   <link rel="stylesheet" href="/studio/styles.css">
-  <link rel="stylesheet" href="/studio/theme.css?v=emoji-fit-2">
+  <link rel="stylesheet" href="/studio/theme.css?v=anchor-remote-1">
 </head>
 <body>
 
@@ -419,6 +419,7 @@
             <div class="card mini"><span class="card-label">Host Notes · Private</span><span class="mini-body" id="anchorCurrentCue">—</span></div>
           </div>
 
+          <div class="card" id="remoteAnchorControls"><div class="card-head"><span class="card-label">Remote anchor · private</span></div><p class="mini-sub">Create a private link and send it directly to the anchor, not to Zoom chat. The anchor sees private answers and notes.</p><div class="tools-row"><button class="btn btn-primary" onclick="createAnchorSession()">Create anchor link</button><button class="btn btn-secondary" onclick="copyAnchorLink()">Copy private link</button><button class="btn btn-secondary" onclick="endAnchorSession()">End access</button></div><label for="anchorPrivateMessage">Message to anchor</label><textarea id="anchorPrivateMessage" placeholder="Private cue for your anchor"></textarea><p id="remoteAnchorStatus" role="status">No anchor session. Keep this host tab open to sync.</p></div>
           <div class="card media-card">
             <div class="card-head">
               <span class="card-label">Attached Media</span>
@@ -610,5 +611,6 @@
   <script src="/studio/integration.js?v=emoji-fit-2"></script>
   <script src="/studio/enhancements.js?v=emoji-1"></script>
   <script src="/studio/folder-and-quiz.js?v=emoji-fit-2"></script>
+  <script src="/studio/remote-anchor.js?v=1"></script>
 </body>
 </html>
