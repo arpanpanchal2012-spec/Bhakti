@@ -482,7 +482,11 @@
       </div>
     </section>
 
-    <section class="view-section" id="anchorScriptView"><div class="card"><div class="card-header"><div class="card-title">Anchor Script</div></div><p class="hint">Generated from your event and sequence. Edit freely; regenerating replaces edits.</p><div class="tools-row"><button class="btn btn-primary" onclick="if(!appData.scriptText || confirm('Replace the current script?')) generateAnchorScript()">Generate script</button><button class="btn btn-secondary" onclick="openTeleprompter()">Teleprompter</button><button class="btn btn-secondary" onclick="downloadScriptTxt()">Download TXT</button><button class="btn btn-secondary" onclick="printAnchorScript()">Print / PDF</button></div><label for="scriptOutputArea">Editable script</label><textarea id="scriptOutputArea" style="min-height:420px;width:100%;line-height:1.6" placeholder="Generate or write your anchor script here"></textarea></div></section>
+    <section class="view-section" id="anchorScriptView"><div class="card"><div class="card-header"><div class="card-title">Anchor Script</div></div><p class="hint">Generated from your event and sequence. Edit freely; regenerating replaces edits.</p>
+<div class="form-row"><div class="form-group"><label for="anchorIntention">Intention / occasion</label><textarea id="anchorIntention" placeholder="For example: honoring Dada Bhagwan Janam Jayanti"></textarea></div><div class="form-group"><label for="anchorParticipantCount">Total participants (optional)</label><input id="anchorParticipantCount" type="number" min="0" max="999" placeholder="For example: 6"><label for="anchorTransition">Transition after each participant</label><input type="text" id="anchorTransition" placeholder="JSCA"></div></div>
+<div class="form-group"><label for="anchorFormat">Welcome: explain the program format</label><textarea id="anchorFormat"></textarea></div>
+<div class="form-group"><label for="anchorInstructions">Welcome: Zoom instructions</label><textarea id="anchorInstructions"></textarea></div>
+<div class="form-group"><label for="anchorQuizFlow">Optional quiz instructions for the anchor</label><textarea id="anchorQuizFlow"></textarea><span class="hint">Remove or edit any steps that do not apply to your event.</span></div><div class="tools-row"><button class="btn btn-primary" onclick="if(!appData.scriptText || confirm('Replace the current script?')) generateAnchorScript()">Generate script</button><button class="btn btn-secondary" onclick="openTeleprompter()">Teleprompter</button><button class="btn btn-secondary" onclick="downloadScriptTxt()">Download TXT</button><button class="btn btn-secondary" onclick="printAnchorScript()">Print / PDF</button></div><label for="scriptOutputArea">Editable script</label><textarea id="scriptOutputArea" style="min-height:420px;width:100%;line-height:1.6" placeholder="Generate or write your anchor script here"></textarea></div></section>
     <!-- ====================================================================
          VIEW 4: PARTICIPANT BUZZER VIEW (FOR ZOOM ATTENDEES)
          ==================================================================== -->
@@ -602,7 +606,7 @@
   </footer>
 
   <!-- JavaScript Engine -->
-  <script src="/studio/app.js?v=emoji-fit-2"></script>
+  <script src="/studio/app.js?v=anchor-format-3"></script>
   <script src="/studio/integration.js?v=emoji-fit-2"></script>
   <script src="/studio/enhancements.js?v=emoji-1"></script>
   <script src="/studio/folder-and-quiz.js?v=emoji-fit-2"></script>

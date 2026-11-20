@@ -1538,69 +1538,55 @@ function renderLeaderboardScores() {
 // -----------------------------------------------------------------------------
 // ANCHOR SCRIPT GENERATOR PRO (Standard MC Script with Cues)
 // -----------------------------------------------------------------------------
+const anchorDefaults = {
+  intention: 'Today we come together in Bhakti, remembering Dada Bhagwan Janam Jayanti.',
+  participantCount: '',
+  transition: 'JSCA',
+  format: 'This is an online Bhakti on Zoom. Participants may sing with or without instrumental accompaniment and supporting singers. We will also have Pad quizzes during the program.',
+  instructions: 'Everyone is welcome to join in. Please keep yourself muted, and keep your video on if possible.',
+  quizFlow: 'We will first display emojis for the Pad. If needed, we can play the instrumental, followed by an English translation as another hint.'
+};
+function populateAnchorSettings(){
+  const settings={...anchorDefaults,...(appData.anchorOptions||{})};
+  for (const [field,id] of Object.entries({intention:'anchorIntention',participantCount:'anchorParticipantCount',transition:'anchorTransition',format:'anchorFormat',instructions:'anchorInstructions',quizFlow:'anchorQuizFlow'})){let el=document.getElementById(id);if(el)el.value=settings[field]??''}
+}
 function generateAnchorScript() {
-  const info = appData.eventInfo || {};
-  const eventName = info.eventName || 'our Bhakti program';
-  const line = '-------------------------------------------------------------------------\n';
-  let script = '';
-
-  script += `ANCHOR SCRIPT: ${eventName}\n`;
-  if (info.eventTheme) script += `Program: ${info.eventTheme}\n`;
-  script += `\n[OPENING]\n`;
-  if (info.customGreeting) script += `"${info.customGreeting}"\n\n`;
-  script += `Anchor: "A very warm welcome to everyone joining us here and on Zoom. Thank you for being part of ${eventName}.`;
-  if (info.themeDescription) script += ` ${info.themeDescription}`;
-  script += ` Let us begin."\n\n`;
-
-  appData.items.forEach((item, idx) => {
-    const title = item.useProjectorTitle ? (info.projectorTitle || item.title) : item.title;
-    script += line + `SEGMENT ${idx + 1}: ${title} [${getItemTypeLabel(item.type)}]\n` + line;
-
-    switch (item.type) {
-      case 'song':
-      case 'audio':
-        script += `Anchor: "Next, please welcome ${item.singer || 'our singer'}${item.location ? ' from ' + item.location : ''}, who will present '${item.title}'."\n`;
-        break;
-      case 'quiz':
-        script += `Anchor: "Here is our next question: '${item.title}'"\n`;
-        if(item.quizEmoji) script += `[EMOJI CLUE: ${item.quizEmoji}]\n`;
-        if(item.answerText) script += `[ANSWER - HOST ONLY: ${item.answerText}]\n`;
-        (item.options || []).forEach((opt, oIdx) => {
-          script += `  ${String.fromCharCode(65 + oIdx)}. ${opt}\n`;
-        });
-        if (item.options && item.options[item.answerIndex] !== undefined) {
-          script += `[ANSWER - HOST ONLY: ${String.fromCharCode(65 + item.answerIndex)}. ${item.options[item.answerIndex]}]\n`;
-        }
-        break;
-      case 'buzz':
-        script += `Anchor: "Our next segment is '${item.title}'. Zoom participants, please open the buzzer link in the chat and enter your name. When the instrumental begins, press Buzz as soon as you recognize it. The first person to buzz will answer first."\n`;
-        if (item.mysteryTitle) {
-          script += `[ANSWER - HOST ONLY: ${item.mysteryTitle}${item.filmName ? ' | ' + item.filmName : ''}${item.originalSinger ? ' | ' + item.originalSinger : ''}]\n`;
-        }
-        if (item.hints) script += `[HINT: ${item.hints}]\n`;
-        break;
-      case 'game':
-        script += `Anchor: "Our next segment is '${item.title}'."\n`;
-        if (item.rules) script += `Anchor: "${item.rules}"\n`;
-        if (item.prizes) script += `Anchor: "${item.prizes}"\n`;
-        break;
-      case 'break':
-        script += `Anchor: "We will take a short break now. Please stay with us; we will continue in a few minutes."\n`;
-        break;
-      default:
-        script += `Anchor: "${title}${item.slideCaption ? ' - ' + item.slideCaption : ''}."\n`;
+  const info=appData.eventInfo||{}, settings={...anchorDefaults,...(appData.anchorOptions||{})};
+  let script=`ANCHOR NOTES: ${info.eventName||'Bhakti program'}\n\nSTART WITH\n`;
+  script+=`Welcome everyone, and thank you for joining.\n`;
+  if(info.customGreeting)script+=`${info.customGreeting}\n`;
+  if(settings.intention)script+=`\nIntention: ${settings.intention}\n`;
+  if(info.themeDescription)script+=`${info.themeDescription}\n`;
+  if(settings.format)script+=`\nProgram format: ${settings.format}\n`;
+  if(String(settings.participantCount).trim()!=='')script+=`\nWe have ${settings.participantCount} participants.\n`;
+  if(settings.instructions)script+=`\nZoom instructions: ${settings.instructions}\n`;
+  for(const item of appData.items){
+    const title=item.useProjectorTitle?(info.projectorTitle||item.title):item.title;
+    if(item.type==='song'||item.type==='audio'){
+      script+=`\nINTRODUCE ${item.singer||'THE NEXT PARTICIPANT'}${item.location?' — '+item.location:''}\n`;
+      script+=`Please welcome ${item.singer||'our next participant'}${item.location?' from '+item.location:''}, who will be singing “${item.title}”.\n`;
+      if(item.mediaFileName)script+=`[ZOOM OPERATOR: Prepare ${item.mediaFileName}${item.type==='song'?' and advance the lyrics as the participant sings':''}.]\n`;
+      if(item.notes)script+=`[PRIVATE CUE: ${item.notes}]\n`;
+      if(settings.transition)script+=`After the performance: ${settings.transition}\n`;
+    } else if(item.type==='quiz'||item.type==='buzz'){
+      script+=`\nPAD QUIZ / ACTIVITY: ${title}\n`;
+      script+=`Now it is time for everyone to participate. ${item.title}\n`;
+      if(settings.quizFlow)script+=`[ANCHOR CUE: ${settings.quizFlow}]\n`;
+      if(item.quizEmoji)script+=`[EMOJI CLUE: ${item.quizEmoji}]\n`;
+      if(item.options?.length)script+=item.options.map((opt,i)=>`${String.fromCharCode(65+i)}. ${opt}`).join('\n')+'\n';
+      const answer=item.answerText||item.mysteryTitle||(item.options||[])[item.answerIndex];
+      if(answer)script+=`[CORRECT ANSWER — PRIVATE: ${answer}]\n`;
+      if(item.hints)script+=`[HINTS — PRIVATE: ${item.hints}]\n`;
+      if(item.notes)script+=`[ZOOM OPERATOR / PRIVATE CUE: ${item.notes}]\n`;
+    } else {
+      script+=`\n${title||'NEXT ITEM'}\n`;
+      if(item.slideCaption)script+=`${item.slideCaption}\n`;
+      if(item.rules)script+=`${item.rules}\n`;
+      if(item.notes)script+=`[ZOOM OPERATOR / PRIVATE CUE: ${item.notes}]\n`;
     }
-    if (item.notes) script += `[HOST NOTE: ${item.notes}]\n`;
-    script += `\n`;
-  });
-
-  script += line + `[CLOSING]\n`;
-  script += `Anchor: "Thank you to all our singers, musicians, volunteers, and everyone who joined us in person and on Zoom. Thank you for being part of ${eventName}."\n`;
-
-  appData.scriptText = script;
-  const area = document.getElementById('scriptOutputArea');
-  if (area) area.value = script;
-  saveShowData();
+  }
+  script+='\nCLOSING\nThank you to all the participants and everyone who joined us.\n';
+  appData.scriptText=script;const area=document.getElementById('scriptOutputArea');if(area)area.value=script;saveShowData();
 }
 
 // Teleprompter Fullscreen Controller
@@ -1839,6 +1825,7 @@ document.addEventListener('keydown', e => {
 // Initialization & Startup Binding
 // -----------------------------------------------------------------------------
 function populateEventDetailsForm() {
+  populateAnchorSettings();
   const info = appData.eventInfo || {};
   document.getElementById('eventNameInput').value = info.eventName || '';
   document.getElementById('eventThemeInput').value = info.eventTheme || '';
@@ -1865,6 +1852,11 @@ function bindEventListeners() {
       });
     }
   });
+
+  populateAnchorSettings();
+  for (const [field,id] of Object.entries({intention:'anchorIntention',participantCount:'anchorParticipantCount',transition:'anchorTransition',format:'anchorFormat',instructions:'anchorInstructions',quizFlow:'anchorQuizFlow'})) {
+    const el=document.getElementById(id);if(el)el.addEventListener('input',()=>{appData.anchorOptions=appData.anchorOptions||{};appData.anchorOptions[field]=el.value;saveShowData()});
+  }
 
   // Item Type Select Change
   document.getElementById('itemTypeSelect').addEventListener('change', updateFormFieldsVisibility);

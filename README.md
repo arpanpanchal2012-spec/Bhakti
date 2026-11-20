@@ -48,3 +48,7 @@ Projector connection status is based on same-browser heartbeat, not a guarantee 
 ## Emoji questions
 
 In Program, choose **Emoji question** under templates. Put the instruction (for example, “Identify the Pad from the emojis”) in Segment Title, and paste the emoji clue into **Emoji clue**. Enter the answer in **Correct answer text**; you may also attach an answer image or audio. Options are not required. Present the question, and click **Reveal Answer** when ready. The clue appears large on the projector. The answer audio, if any, is played manually from the host screen after revealing it.
+
+## Anchor script format
+
+The anchor script can be generated as a welcome, intention, online-format and Zoom instructions, followed by participant introductions and private quiz cues. In the Anchor Script screen, edit the intention, total participant count, program format, quiz flow and post-performance transition before generating. The sequence supplies names, locations, Pad titles and answers. Put special Zoom-operation instructions or links in each item's private notes. The generated text remains editable, and regenerating replaces manual edits. This release does not include a synchronized remote anchor screen: the anchor-screen image is a design concept only.
