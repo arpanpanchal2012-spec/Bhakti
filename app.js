@@ -1544,11 +1544,12 @@ const anchorDefaults = {
   transition: 'JSCA',
   format: 'This is an online Bhakti on Zoom. Participants may sing with or without instrumental accompaniment and supporting singers. We will also have Pad quizzes during the program.',
   instructions: 'Everyone is welcome to join in. Please keep yourself muted, and keep your video on if possible.',
+  buzzerIntro: 'We have some buzzer rounds during the program. If you would like to participate, please click the participant buzzer link in the Zoom chat, enter your name, and select Join round. Keep that buzzer page open while you remain in Zoom. When the host opens the buzzer, press Buzz as soon as you know the answer.',
   quizFlow: 'We will first display emojis for the Pad. If needed, we can play the instrumental, followed by an English translation as another hint.'
 };
 function populateAnchorSettings(){
   const settings={...anchorDefaults,...(appData.anchorOptions||{})};
-  for (const [field,id] of Object.entries({intention:'anchorIntention',participantCount:'anchorParticipantCount',transition:'anchorTransition',format:'anchorFormat',instructions:'anchorInstructions',quizFlow:'anchorQuizFlow'})){let el=document.getElementById(id);if(el)el.value=settings[field]??''}
+  for (const [field,id] of Object.entries({intention:'anchorIntention',participantCount:'anchorParticipantCount',transition:'anchorTransition',format:'anchorFormat',instructions:'anchorInstructions',buzzerIntro:'anchorBuzzerIntro',quizFlow:'anchorQuizFlow'})){let el=document.getElementById(id);if(el)el.value=settings[field]??''}
 }
 function generateAnchorScript() {
   const info=appData.eventInfo||{}, settings={...anchorDefaults,...(appData.anchorOptions||{})};
@@ -1560,12 +1561,12 @@ function generateAnchorScript() {
   if(settings.format)script+=`\nProgram format: ${settings.format}\n`;
   if(String(settings.participantCount).trim()!=='')script+=`\nWe have ${settings.participantCount} participants.\n`;
   if(settings.instructions)script+=`\nZoom instructions: ${settings.instructions}\n`;
+  if(settings.buzzerIntro)script+=`\nBuzzer instructions: ${settings.buzzerIntro}\n`;
   for(const item of appData.items){
     const title=item.useProjectorTitle?(info.projectorTitle||item.title):item.title;
     if(item.type==='song'||item.type==='audio'){
       script+=`\nINTRODUCE ${item.singer||'THE NEXT PARTICIPANT'}${item.location?' — '+item.location:''}\n`;
       script+=`Please welcome ${item.singer||'our next participant'}${item.location?' from '+item.location:''}, who will be singing “${item.title}”.\n`;
-      if(item.mediaFileName)script+=`[ZOOM OPERATOR: Prepare ${item.mediaFileName}${item.type==='song'?' and advance the lyrics as the participant sings':''}.]\n`;
       if(item.notes)script+=`[PRIVATE CUE: ${item.notes}]\n`;
       if(settings.transition)script+=`After the performance: ${settings.transition}\n`;
     } else if(item.type==='quiz'||item.type==='buzz'){
@@ -1577,12 +1578,12 @@ function generateAnchorScript() {
       const answer=item.answerText||item.mysteryTitle||(item.options||[])[item.answerIndex];
       if(answer)script+=`[CORRECT ANSWER — PRIVATE: ${answer}]\n`;
       if(item.hints)script+=`[HINTS — PRIVATE: ${item.hints}]\n`;
-      if(item.notes)script+=`[ZOOM OPERATOR / PRIVATE CUE: ${item.notes}]\n`;
+      if(item.notes)script+=`[PRIVATE CUE: ${item.notes}]\n`;
     } else {
       script+=`\n${title||'NEXT ITEM'}\n`;
       if(item.slideCaption)script+=`${item.slideCaption}\n`;
       if(item.rules)script+=`${item.rules}\n`;
-      if(item.notes)script+=`[ZOOM OPERATOR / PRIVATE CUE: ${item.notes}]\n`;
+      if(item.notes)script+=`[PRIVATE CUE: ${item.notes}]\n`;
     }
   }
   script+='\nCLOSING\nThank you to all the participants and everyone who joined us.\n';
@@ -1854,7 +1855,7 @@ function bindEventListeners() {
   });
 
   populateAnchorSettings();
-  for (const [field,id] of Object.entries({intention:'anchorIntention',participantCount:'anchorParticipantCount',transition:'anchorTransition',format:'anchorFormat',instructions:'anchorInstructions',quizFlow:'anchorQuizFlow'})) {
+  for (const [field,id] of Object.entries({intention:'anchorIntention',participantCount:'anchorParticipantCount',transition:'anchorTransition',format:'anchorFormat',instructions:'anchorInstructions',buzzerIntro:'anchorBuzzerIntro',quizFlow:'anchorQuizFlow'})) {
     const el=document.getElementById(id);if(el)el.addEventListener('input',()=>{appData.anchorOptions=appData.anchorOptions||{};appData.anchorOptions[field]=el.value;saveShowData()});
   }
 
