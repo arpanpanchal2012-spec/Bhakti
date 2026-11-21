@@ -20,8 +20,17 @@ def persist(code):
 class Handler(BaseHTTPRequestHandler):
  def respond(self,code,obj):
   b=json.dumps(obj).encode();self.send_response(code);self.send_header('Content-Type','application/json');self.send_header('Cache-Control','no-store');self.end_headers();self.wfile.write(b)
+ def do_HEAD(self):
+  path=urlparse(self.path).path
+  if path=='/health':
+   self.send_response(200);self.send_header('Content-Type','text/plain; charset=utf-8');self.send_header('Cache-Control','no-store');self.end_headers();return
+  if path in ('/', '/index.html', '/studio', '/studio/', '/studio/index.html', '/anchor', '/anchor/', '/anchor/index.html', '/buzzer', '/buzzer/', '/buzzer/index.html'):
+   self.send_response(200);self.send_header('Content-Type','text/html; charset=utf-8');self.send_header('Cache-Control','no-store');self.end_headers();return
+  self.send_error(404)
  def do_GET(self):
   u=urlparse(self.path)
+  if u.path=='/health':
+   body=b'OK';self.send_response(200);self.send_header('Content-Type','text/plain; charset=utf-8');self.send_header('Cache-Control','no-store');self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body);return
   if u.path=='/api/state':
    room=parse_qs(u.query).get('room',[''])[0].upper()
    with lock:
