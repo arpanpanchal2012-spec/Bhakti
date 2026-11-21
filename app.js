@@ -696,6 +696,8 @@ function editSequenceItem(index) {
     document.getElementById('quizAnswerSelect').value = item.answerIndex !== undefined ? item.answerIndex : 0;
     document.getElementById('quizAnswerText').value=item.answerText||'';
     document.getElementById('quizEmoji').value=item.quizEmoji||'';
+    document.getElementById('quizType').value=item.quizType||(item.quizEmoji?'emoji':'trivia');
+    document.getElementById('quizAnchorCue').value=item.quizAnchorCue||'';
     document.getElementById('answerImageName').textContent=item.answerImageName||'';
     document.getElementById('answerAudioName').textContent=item.answerAudioName||'';
   } else if (item.type === 'buzz') {
@@ -765,6 +767,8 @@ function resetItemForm() {
   document.getElementById('quizOptionsInput').value = '';
   document.getElementById('quizAnswerText').value='';
   document.getElementById('quizEmoji').value='';
+  document.getElementById('quizType').value='trivia';
+  document.getElementById('quizAnchorCue').value='';
   document.getElementById('quizAnswerImage').value='';document.getElementById('quizAnswerAudio').value='';
   document.getElementById('removeAnswerImage').checked=false;document.getElementById('removeAnswerAudio').checked=false;
   document.getElementById('answerImageName').textContent='';document.getElementById('answerAudioName').textContent='';
@@ -840,6 +844,8 @@ async function handleSaveItem() {
     newItem.answerIndex = parseInt(document.getElementById('quizAnswerSelect').value, 10) || 0;
     newItem.answerText=document.getElementById('quizAnswerText').value.trim();
     newItem.quizEmoji=document.getElementById('quizEmoji').value.trim();
+    newItem.quizType=document.getElementById('quizType').value;
+    newItem.quizAnchorCue=document.getElementById('quizAnchorCue').value.trim();
     for (const [kind,input] of [['Image','quizAnswerImage'],['Audio','quizAnswerAudio']]) {
       const key=itemId+'-answer-'+kind.toLowerCase();const file=document.getElementById(input).files[0];
       newItem['answer'+kind+'Name']=prevItem?.['answer'+kind+'Name']||'';
@@ -1561,7 +1567,7 @@ function generateAnchorScript() {
   if(settings.format)script+=`\nProgram format: ${settings.format}\n`;
   if(String(settings.participantCount).trim()!=='')script+=`\nWe have ${settings.participantCount} participants.\n`;
   if(settings.instructions)script+=`\nZoom instructions: ${settings.instructions}\n`;
-  if(settings.buzzerIntro)script+=`\nBuzzer instructions: ${settings.buzzerIntro}\n`;
+  if(settings.buzzerIntro && appData.items.some(item=>item.enableBuzzer||item.type==='buzz'))script+=`\nBuzzer instructions: ${settings.buzzerIntro}\n`;
   for(const item of appData.items){
     const title=item.useProjectorTitle?(info.projectorTitle||item.title):item.title;
     if(item.type==='song'||item.type==='audio'){
@@ -1572,7 +1578,12 @@ function generateAnchorScript() {
     } else if(item.type==='quiz'||item.type==='buzz'){
       script+=`\nPAD QUIZ / ACTIVITY: ${title}\n`;
       script+=`Now it is time for everyone to participate. ${item.title}\n`;
-      if(settings.quizFlow)script+=`[ANCHOR CUE: ${settings.quizFlow}]\n`;
+      const kind=item.type==='buzz'?'instrumental':(item.quizType || (item.quizEmoji?'emoji':'trivia'));
+      const defaultCues={trivia:'Read the question and invite participants to answer.',emoji:'Display the emojis and invite participants to identify the Pad.',next_line:'Play the Pad, then ask participants to identify the next line.',instrumental:'Play the instrumental and ask participants to identify the Pad.',audio:'Play the audio clip, then invite participants to answer the question.'};
+      const questionCue=item.quizAnchorCue||defaultCues[kind]||defaultCues.trivia;
+      if(questionCue)script+=`[ANCHOR CUE: ${questionCue}]\n`;
+      if(item.enableBuzzer||item.type==='buzz')script+=`Anchor: If you have joined the buzzer page, keep it open. When the host opens the buzzer, press Buzz when you know the answer. The host will invite the first person to answer.\n`;
+
       if(item.quizEmoji)script+=`[EMOJI CLUE: ${item.quizEmoji}]\n`;
       if(item.options?.length)script+=item.options.map((opt,i)=>`${String.fromCharCode(65+i)}. ${opt}`).join('\n')+'\n';
       const answer=item.answerText||item.mysteryTitle||(item.options||[])[item.answerIndex];

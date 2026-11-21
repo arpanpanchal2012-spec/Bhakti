@@ -64,3 +64,7 @@ Anchor sync uses periodic polling (about two seconds each way), not instant or f
 ## Anchor welcome and buzzer instructions
 
 The Anchor Script settings include an editable **Welcome: participant buzzer instructions** field. The default explains how guests open the participant link in Zoom chat, enter a name, join and keep the page open. Clear the field to omit these instructions. Generated scripts no longer add automatic Zoom-operator media instructions. Existing private notes remain private cues. After updating the app, regenerate the script to apply the new wording; regeneration replaces existing manual script edits, so export or copy the current script first.
+
+## Question-specific anchor cues
+
+For a quiz item, choose a Question type in Program: simple trivia, emoji, next line, instrumental, or audio. The corresponding anchor cue is generated automatically. Enter an optional custom anchor instruction on the quiz item to replace that question's default cue. Enable the optional buzzer checkbox for individual questions; the opening script then explains how to join the buzzer, and those questions include a short buzzer reminder. Instrumental/audio/next-line audio can be attached to the question and played from the host media player. Older quiz items without a type default to simple trivia, except items with an emoji clue which default to emoji; edit other older quizzes to select the desired type. The old global quiz-flow text is no longer applied to every question. Save any manual anchor script edits before regenerating.

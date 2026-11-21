@@ -138,7 +138,7 @@
               </span>
             </div>
 
-            <div class="form-group"><label for="segmentTemplate">Start from a template (optional)</label><select id="segmentTemplate"><option value="">Choose template</option><option value="blank">Blank text</option><option value="song">Bhajan performance</option><option value="slide">Welcome slide</option><option value="quiz">Trivia question</option><option value="emoji">Emoji question</option><option value="break">Intermission</option><option value="announcement">Announcement</option></select></div>
+            <div class="form-group"><label for="segmentTemplate">Start from a template (optional)</label><select id="segmentTemplate"><option value="">Choose template</option><option value="blank">Blank text</option><option value="song">Bhajan performance</option><option value="slide">Welcome slide</option><option value="quiz">Simple trivia quiz</option><option value="emoji">Emoji quiz</option><option value="next_line">Identify the next line</option><option value="instrumental">Instrumental quiz</option><option value="audio_quiz">Audio quiz</option><option value="break">Intermission</option><option value="announcement">Announcement</option></select></div>
             <div class="form-group">
               <label for="itemTypeSelect">Segment Type:</label>
               <select id="itemTypeSelect">
@@ -251,6 +251,8 @@
 
             <!-- Quiz Fields Group -->
             <div id="formQuizGroup" class="hide">
+              <div class="form-group"><label for="quizType">Question type</label><select id="quizType"><option value="trivia">Simple trivia quiz</option><option value="emoji">Emoji quiz</option><option value="next_line">Identify the next line</option><option value="instrumental">Identify Pad from instrumental</option><option value="audio">Audio quiz</option></select><span class="hint">For instrumental, audio or next-line quizzes, attach the question audio using Attach Local Media File above. Play it from the host screen.</span></div>
+              <div class="form-group"><label for="quizAnchorCue">Anchor instructions for this question (optional)</label><textarea id="quizAnchorCue" placeholder="Leave blank to use the instruction for the selected question type"></textarea><span class="hint">This private cue replaces the default instruction for this question.</span></div>
               <div class="form-group"><label for="quizEmoji">Emoji clue (optional)</label><textarea id="quizEmoji" rows="2" placeholder="Paste emojis here, for example: 🌙 🌊 🎵"></textarea><span class="hint">For an Emoji Question, enter the instruction in the Segment Title field above. Emojis appear large below it.</span></div>
               <div class="form-group">
                 <label for="quizOptionsInput">Answer Options <span class="hint">(optional; enter 2–4, one per line)</span>:</label>
@@ -488,7 +490,7 @@
 <div class="form-group"><label for="anchorFormat">Welcome: explain the program format</label><textarea id="anchorFormat"></textarea></div>
 <div class="form-group"><label for="anchorInstructions">Welcome: Zoom instructions</label><textarea id="anchorInstructions"></textarea></div>
 <div class="form-group"><label for="anchorBuzzerIntro">Welcome: participant buzzer instructions</label><textarea id="anchorBuzzerIntro"></textarea><span class="hint">Edit or clear this to change the opening instructions.</span></div>
-<div class="form-group"><label for="anchorQuizFlow">Optional quiz instructions for the anchor</label><textarea id="anchorQuizFlow"></textarea><span class="hint">Remove or edit any steps that do not apply to your event.</span></div><div class="tools-row"><button class="btn btn-primary" onclick="if(!appData.scriptText || confirm('Replace the current script?')) generateAnchorScript()">Generate script</button><button class="btn btn-secondary" onclick="openTeleprompter()">Teleprompter</button><button class="btn btn-secondary" onclick="downloadScriptTxt()">Download TXT</button><button class="btn btn-secondary" onclick="printAnchorScript()">Print / PDF</button></div><label for="scriptOutputArea">Editable script</label><textarea id="scriptOutputArea" style="min-height:420px;width:100%;line-height:1.6" placeholder="Generate or write your anchor script here"></textarea></div></section>
+<div class="form-group" hidden><label for="anchorQuizFlow">Previous quiz instruction setting</label><textarea id="anchorQuizFlow"></textarea></div><p class="hint">Quiz cues now depend on the question type selected in Program; edit an individual question to customize its cue.</p><div class="tools-row"><button class="btn btn-primary" onclick="if(!appData.scriptText || confirm('Replace the current script?')) generateAnchorScript()">Generate script</button><button class="btn btn-secondary" onclick="openTeleprompter()">Teleprompter</button><button class="btn btn-secondary" onclick="downloadScriptTxt()">Download TXT</button><button class="btn btn-secondary" onclick="printAnchorScript()">Print / PDF</button></div><label for="scriptOutputArea">Editable script</label><textarea id="scriptOutputArea" style="min-height:420px;width:100%;line-height:1.6" placeholder="Generate or write your anchor script here"></textarea></div></section>
     <!-- ====================================================================
          VIEW 4: PARTICIPANT BUZZER VIEW (FOR ZOOM ATTENDEES)
          ==================================================================== -->
@@ -608,9 +610,9 @@
   </footer>
 
   <!-- JavaScript Engine -->
-  <script src="/studio/app.js?v=anchor-buzzer-intro-4"></script>
+  <script src="/studio/app.js?v=quiz-cues-5"></script>
   <script src="/studio/integration.js?v=emoji-fit-2"></script>
-  <script src="/studio/enhancements.js?v=emoji-1"></script>
+  <script src="/studio/enhancements.js?v=quiz-cues-5"></script>
   <script src="/studio/folder-and-quiz.js?v=emoji-fit-2"></script>
   <script src="/studio/remote-anchor.js?v=1"></script>
 </body>
