@@ -184,7 +184,7 @@
             <div id="formLyricsGroup">
               <div class="form-group">
                 <label for="itemLyricsInput">Lyrics <span class="hint">(one line per line break - advances with Arrow keys)</span>:</label>
-                <textarea id="itemLyricsInput" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea>
+                <p><button type="button" class="btn btn-secondary" onclick="openPadLibrary()">📚 Search Pad Library</button></p><p><button type="button" class="btn btn-secondary" onclick="openLyricsLibrary()">Find in Separate Lyrics Library</button></p><textarea id="itemLyricsInput" placeholder="Line 1&#10;Line 2&#10;Line 3"></textarea>
               </div>
 
               <div class="form-group"><label for="globalLyricSize">Default lyric size for new songs</label><input type="range" id="globalLyricSize" min="32" max="120" step="4" value="64"><span id="globalLyricSizeValue">64px</span></div>
@@ -618,5 +618,7 @@
   <script src="/studio/folder-and-quiz.js?v=emoji-fit-2"></script>
   <script src="/studio/remote-anchor.js?v=2"></script>
   <script src="/studio/bilingual.js?v=2"></script>
+  <script src="/studio/pad-library.js?v=1"></script>
+  <script src="/studio/lyrics-bridge.js?v=1"></script>
 </body>
 </html>

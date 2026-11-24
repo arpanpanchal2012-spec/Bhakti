@@ -76,3 +76,24 @@ The projector participant/ranking overlay is hidden by default. Create, open, lo
 In Anchor Script, generate and edit the English and Gujarati scripts independently. Gujarati uses Roman Gujarati + English standard prompts, not automatic translation: names, Pad titles, custom greeting, notes, answers, and custom cues remain exactly as entered. Review and edit both scripts before the show. Regenerating a language replaces edits to that language. Settings and scripts are saved with the show. Download Gujarati as UTF-8 TXT.
 
 Create the private anchor link from Presenter and send it directly to the anchor. On that page, choose English or Gujarati and select Open teleprompter. Start or pause scrolling, adjust speed and text size, or scroll manually. Updates arrive while the host tab is open; unchanged text does not reset the scrolling position. Older shows without Gujarati text remain usable. The anchor link contains private answers and cues: never post it publicly.
+
+
+## Pad Library inside Studio — comparison version
+
+In the song editor choose Search Pad Library. Import the separate `DMHT-Pad-Library-FM-OCR-Comparison.json` file on the host computer. The app stores the file in this browser's IndexedDB; it is not uploaded to the Studio server, GitHub or projector. Keep a backup; browser storage may be cleared or evicted and each host/device must import its own copy. No cross-browser synchronization is included.
+
+Search by title or lyric words, optionally filter by source and script, choose Preview, compare and correct the text, and choose Use lyrics in this song. Confirm replacement and save the song. The action does not automatically change the projector. Roman script is not necessarily the English language.
+
+The data includes 2,483 Muktisukh language entries, 570 available direct FM entries, 949 automatically separated entries from the provided All Pads PDF, 746 automatically separated entries from the provided FM PDF, 226 OCR-derived entries from the Gnanbhakti PDF, and 12 appendix pages for reference only. Counts include duplicates, recordings and language versions, not necessarily unique Pads. Gnanbhakti appendix pages may contain fragments or multiple songs and cannot be added as songs. 173 of 743 attempted FM track files failed or timed out.
+
+An automated title/text comparison found 1,132 possible website matches across 1,921 extracted song entries; 582 of those had at least 95% normalized character similarity. Similarity ignores punctuation and is not proof that words, meaning, titles, sequence or completeness are correct. The remaining 789 extracted song entries did not produce a likely source match automatically. No entry has been certified word-for-word by a human as part of this process. The comparison report includes the 12 appendix reference pages as additional unverified rows. Source differences may be legitimate variations. A matched website version can be displayed and copied into the review box, but can itself differ from the original PDF.
+
+The FM PDF has known character corruption; the All Pads PDF may have OCR and boundary errors. Gnanbhakti was OCR'd due to its font encoding: OCR often introduces errors, and individual song boundaries/titles need manual verification. The appendix is represented only by reference pages. No counts prove all Pads or language versions are present. Original PDFs are not copied into this Studio repository; page numbers refer to the local PDFs. Do not use lyrics live until they have been checked against the original and intended version.
+
+Keep GitHub private if you later upload lyrics or PDFs. The earlier separate Lyrics Library connection remains available through lyrics-bridge.js.
+
+### FM PDF OCR comparison update
+
+The PDF contains 746 numbered Pads. This update includes a separate `Your FM PDF (OCR)` option with an automatic OCR reading of each one, in addition to the original PDF extraction. All 993 pages of song content were processed with two OCR configurations. For 307 Pads a possible FM/Muktisukh website version was found by approximate title; 265 had a normalized text similarity of at least 95% using either extraction or OCR. The remaining 439 had no likely match. The result is not a manual, word-for-word verification: OCR, title matching and source-version selection can be wrong, and punctuation differences are ignored in scores. Do not use until reviewed against the original. The PDF is the reference, and website failures do not mean a Pad is absent from that PDF. The file DMHT-FM-PDF-Comparison.csv records each Pad's reference page and comparison scores.
+
+Open the Pad Library and choose Import / replace library file to load the new JSON in each host browser. This replaces the browser's previous library dataset but not saved show songs. Keep the original PDFs and the data file as backups.
